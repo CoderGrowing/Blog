@@ -1,0 +1,89 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}CoderGrowinging{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse " role="navigation">
+<div class="container">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">主页</a>
+    </div>
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="#">笔记</a></li>
+            <li><a href="#">书影</a></li>
+            <li><a href="#">扯淡</a></li>
+            <li><a href="#">留言板</a></li>
+            <li><a href="#">关于</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if current_user.is_authenticated %}
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    账户<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url_for('main.logout') }}">登出</a></li>
+                    <li><a href="#">修改资料</a></li>
+                </ul>
+            </li>
+            {% else %}
+            <li><a href="{{ url_for('main.user_login') }}">登录</a></li>
+            {% endif %}
+        </ul>
+{#         <ul class="nav navbar-nav navbar-right">#}
+{#                {% if current_user.is_authenticated %}#}
+{#                <li class="dropdown">#}
+{#                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">#}
+{#                        Account <b class="caret"></b>#}
+{#                    </a>#}
+{#                    <ul class="dropdown-menu">#}
+{#                        <li><a href="#">Change Password</a></li>#}
+{#                        <li><a href="#">Change Email</a></li>#}
+{#                        <li><a href="#">Log Out</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#                {% else %}#}
+{#                <li><a href="#">Log In</a></li>#}
+{#                {% endif %}#}
+{#            </ul>#}
+
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}{% endblock %}
+</div>
+    {#页脚#}
+    <div class="footer">
+      <div class="container">
+       <p class="text-muted">CoderGrowinging的个人博客 <a href="http://codergrowing.com">Codergrowing</a> |
+        Powered By <a href="http://flask.pocoo.org/" target="_blank">Flask</a></p>
+      </div>
+    </div>
+    {#页脚结束#}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+{% endblock %}
+

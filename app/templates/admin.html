@@ -1,0 +1,26 @@
+{#创建文章提交表单#}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+    {{ super() }}
+    {{ simplemde.css }}
+    {{ simplemde.js }}
+{% endblock %}
+
+
+{% block content %}
+    <form method="POST" action="{{ url_for('main.admin') }}">
+    <input type="text" name="heading" class="form-control" placeholder="标题">
+    <textarea name="article">
+    </textarea>
+    {{ simplemde.load }}
+    <input type="submit" class="btn btn-lg btn-primary btn-block" value="提交">
+    </form>
+{#    <form method="POST" action="{{ url_for('main.admin') }}">#}
+{#    </form>#}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

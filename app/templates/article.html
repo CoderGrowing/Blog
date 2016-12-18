@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} 文章 {% endblock %}
+
+{% block page_content %}
+<ul>
+{% for post in posts %}
+<li>
+{#    <div class="post-data">{{ moment(post.timestamp).fromNow() }}</div>#}
+{#    <div class="post-author">#}
+{#        <a href="#">{{ article.heading }}</a>#}
+{#    </div>#}
+    <a href="{{ url_for('main.article', id=post.id) }}" style="text-decoration: none"><h3 style="display: inline">{{ post.heading }}</h3></a>
+    <div class="post-body">
+    {% if post.body_html %}
+        {{ post.body_html | safe }}
+    {% else %}
+        {{ post.body }}
+    {% endif %}
+    </div>
+    <div>
+        {{ wtf.quick_form(form) }}
+    </div>
+     <a href="{{ url_for('.article', id=post.id) }}#comments">
+    <span class="label label-primary">
+        {{ post.comments.count() }} 评论
+    </span>
+    </a>
+</li>
+    <ul class="comments">
+    {% for comment in comments %}
+    <li class="comment">
+        <div class="comment-content">
+            <div class="comment-body">
+                    {{ comment.body }}
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endfor %}
+</ul>
+{% endblock %}
