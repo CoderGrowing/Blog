@@ -54,5 +54,3 @@ class ChangePasswordForm(FlaskForm):
     new_password2 = PasswordField(u'确认新密码', validators=[DataRequired()])
     submit = SubmitField(u'提交')
 
-
-
