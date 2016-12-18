@@ -2,7 +2,7 @@
 
 from flask import render_template, redirect, url_for, flash, current_app, request
 from app.main import main
-from .forms import AdminLoginForm, UserLoginForm, RegisterForm, CommentForm
+from .forms import AdminLoginForm, UserLoginForm, RegisterForm, CommentForm, EditProfileForm, ChangePasswordForm
 from app.models import db, Admin, Article, User, Comment
 from flask_login import login_user, login_required, logout_user, current_user
 
@@ -95,5 +95,34 @@ def article(id):
 
     return render_template('article.html', posts=[post], form=form,
                            comments=comments, pagination=pagination)
+
+@main.route('/edit-profile', methods=['POST', 'GET'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.name.data
+        db.session.add(current_user)
+        flash(u'昵称修改成功！')
+        return redirect(url_for('main.index', username=current_user.username))
+
+    return render_template('edit-profile.html', form=form)
+
+@main.route('/change-password', methods=['POST', 'GET'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.old_password.data):
+            current_user.password = form.new_password.data
+            db.session.add(current_user)
+            flash(u'密码修改成功！')
+            return redirect(url_for('main.index'))
+        else:
+            flash(u'密码错误，请确认您输入的密码是否正确')
+
+    return render_template('change-password.html', form=form)
+
+
 
 

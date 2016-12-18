@@ -30,10 +30,11 @@
             {% if current_user.is_authenticated %}
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    账户<b class="caret"></b></a>
+                    {{ current_user.username }}的账户<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{ url_for('main.logout') }}">登出</a></li>
-                    <li><a href="#">修改资料</a></li>
+                    <li><a href="{{ url_for('main.edit_profile') }}">换个名字\(^o^)/~</a></li>
+                    <li><a href="{{ url_for('main.change_password') }}">修改密码</a></li>
                 </ul>
             </li>
             {% else %}
