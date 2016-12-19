@@ -1,26 +1,19 @@
-{#创建文章提交表单#}
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+
 {% block head %}
     {{ super() }}
-    {{ simplemde.css }}
-    {{ simplemde.js }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin-nav.css') }}">
 {% endblock %}
 
-
-{% block content %}
-    <form method="POST" action="{{ url_for('main.admin') }}">
-    <input type="text" name="heading" class="form-control" placeholder="标题">
-    <textarea name="article">
-    </textarea>
-    {{ simplemde.load }}
-    <input type="submit" class="btn btn-lg btn-primary btn-block" value="提交">
-    </form>
-{#    <form method="POST" action="{{ url_for('main.admin') }}">#}
-{#    </form>#}
+{% block page_content %}
+    <div class="container-fluid">
+    {% include "_admin-nav.html" %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">欢迎来到后台管理，请在左侧导航栏选择相应功能</h1>
+    </div>
+    </div>
 
 {% endblock %}
 
-{% block scripts %}
-{{ super() }}
-{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}

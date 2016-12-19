@@ -32,15 +32,20 @@ def admin_login():
         flash(u'用户名或密码错误', 'warning')
     return render_template('admin-login.html', form=form)
 
-@main.route('/admin', methods=['GET', 'POST'])
+@main.route('/admin', methods=['POST', 'GET'])
 @login_required
 def admin():
+    return render_template('admin.html')
+
+@main.route('/write-article', methods=['GET', 'POST'])
+@login_required
+def write_article():
     if request.method == 'POST':
         article = Article(heading=request.form['heading'], body=request.form['article'])
         db.session.add(article)
         return redirect(url_for('main.index'))
 
-    return render_template('admin.html')
+    return render_template('write-article.html')
 
 
 #
@@ -122,6 +127,10 @@ def change_password():
             flash(u'密码错误，请确认您输入的密码是否正确')
 
     return render_template('change-password.html', form=form)
+
+@main.route('/test')
+def test():
+    return render_template('_admin-nav.html')
 
 
 

@@ -4,7 +4,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, DateTimeField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from wtforms import ValidationError
-from flask_pagedown.fields import PageDownField
 from app.models import User
 
 class AdminLoginForm(FlaskForm):
@@ -48,7 +47,7 @@ class EditProfileForm(FlaskForm):
     submit = SubmitField(u'提交')
 
 class ChangePasswordForm(FlaskForm):
-    old_password = PasswordField(u'请输入旧密码', validators=[DataRequired()])
+    old_password = PasswordField(u'请输入当前密码', validators=[DataRequired()])
     new_password = PasswordField(u'请输入新密码', [DataRequired(), Length(6, 16, message=u'密码必须为6-16位'),
                                               EqualTo('new_password2', message=u'两次输入的密码不一致')])
     new_password2 = PasswordField(u'确认新密码', validators=[DataRequired()])

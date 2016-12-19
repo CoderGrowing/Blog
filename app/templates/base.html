@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block navbar %}
-<div class="navbar navbar-inverse " role="navigation">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 <div class="container">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -73,15 +73,17 @@
     {% endfor %}
 
     {% block page_content %}{% endblock %}
-</div>
-    {#页脚#}
-    <div class="footer">
-      <div class="container">
-       <p class="text-muted">CoderGrowinging的个人博客 <a href="http://codergrowing.com">Codergrowing</a> |
-        Powered By <a href="http://flask.pocoo.org/" target="_blank">Flask</a></p>
-      </div>
-    </div>
-    {#页脚结束#}
+    {% block footer %}
+        </div>
+        {#页脚#}
+        <div class="footer">
+          <div class="container">
+           <p class="text-muted">CoderGrowinging的个人博客 <a href="http://codergrowing.com">Codergrowing</a> |
+            Powered By <a href="http://flask.pocoo.org/" target="_blank">Flask</a></p>
+          </div>
+        </div>
+        {#页脚结束#}
+    {% endblock %}
 {% endblock %}
 
 {% block scripts %}
