@@ -13,6 +13,7 @@
     <div class="container-fluid">
     {% include "_admin-nav.html" %}
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h3 class="page-header">写点什么呢？</h3>
         <form method="POST" action="{{ url_for('main.write_article') }}">
         <input type="text" name="heading" class="form-control" placeholder="标题">
         <textarea id="clear" name="article" placeholder="正文" class="form-control"></textarea>

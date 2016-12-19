@@ -2,25 +2,32 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 {% block title %}CoderGrowinging{% endblock %}
+{% block head %}
+{{ super() }}
+    <link rel="stylesheet" href="{{ url_for("static", filename="blog.css") }}">
+{% endblock %}
 
 {% block content %}
 {{ super() }}
+
 <div class="container">
-<ul>
-{% for post in posts %}
-<li>
-    <a href="{{ url_for('.article', id=post.id) }}" style="text-decoration: none"><h3 style="display: inline">{{ post.heading }}</h3></a>
-    <div class="post-body">
-    <div class="post-date" style="float: right;">{{ post.timestamp}}</div>
-    {% if post.body_html %}
-        {{ post.body_html | safe }}
-    {% else %}
-        {{ post.body }}
-    {% endif %}
-    </div>
-</li>
-{% endfor %}
-</ul>
+<div class="col-sm-8 blog-main">
+<div class="blog-post">
+{#标题#}
+<div>
+    {% for post in posts %}
+        <a href="{{ url_for('.article', id=post.id) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
+        <p class="blog-post-meta">时间:{{ post.timestamp}}</p>
+        {% if post.body_html %}
+            {{ post.body_html | safe }}
+        {% else %}
+            {{ post.body }}
+        {% endif %}
+    {% endfor %}
+
+</div>
+</div>
+</div>
 </div>
 {% if pagination %}
 <div class="pagination">
