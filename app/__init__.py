@@ -7,7 +7,6 @@ from flask_bootstrap import Bootstrap
 from config import config
 from flask_login import LoginManager
 from flask_pagedown import PageDown
-from flask_simplemde import SimpleMDE
 from flask_moment import Moment
 
 login_manager = LoginManager()
@@ -18,7 +17,6 @@ bootstrap = Bootstrap()
 mail = Mail()
 db = SQLAlchemy()
 pagedown = PageDown()
-simplemde = SimpleMDE()
 moment = Moment()
 
 
@@ -33,7 +31,6 @@ def create_app(config_name):
     mail.init_app(app)
     login_manager.init_app(app)
     pagedown.init_app(app)
-    simplemde.init_app(app)
     moment.init_app(app)
 
     from .main import main as main_blueprint

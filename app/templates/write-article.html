@@ -2,10 +2,10 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% block head %}
-    {{ super() }}
-    {{ simplemde.css }}
-    {{ simplemde.js }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin-nav.css') }}">
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin-nav.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='simplemde.min.css') }}">
+  <script src="{{ url_for('static', filename="simplemde.min.js") }}"></script>
 {% endblock %}
 
 {% block navbar %}{% endblock %}
@@ -15,13 +15,19 @@
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <h3 class="page-header">写点什么呢？</h3>
         <form method="POST" action="{{ url_for('main.write_article') }}">
-        <input type="text" name="heading" class="form-control" placeholder="标题">
+        <input type="text" name="heading" class="form-control" placeholder="标题" required="required">
         <textarea id="clear" name="article" placeholder="正文" class="form-control"></textarea>
-        {{ simplemde.load }}
         <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
         </form>
     </div>
     </div>
+  <script>
+  var simplemde = new SimpleMDE({spellChecker:false, autosave: {
+        enabled: true,
+        uniqueId: "MyUniqueID",
+        delay: 10,
+    }});
+  </script>
 
 {% endblock %}
 {% block footer %}{% endblock %}
