@@ -9,6 +9,11 @@
 {% block title %} 文章 {% endblock %}
 
 {% block page_content %}
+  <div class="blog-header">
+    <h1 class="blog-title">CoderGrowing</h1>
+    <p class="lead blog-description">随笔随心</p>
+    <hr>
+  </div>
     <div class="col-sm-8 blog-main">
     <div class="blog-post">
     {#标题#}
@@ -24,6 +29,16 @@
 
     </div>
     </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="list-group">
+        <p class="list-group-item active">
+          最近文章
+        </p>
+         {% for po in limit_posts %}
+           <a href="{{ url_for('.article', id=po.id) }}" class="list-group-item title-link-style">{{ po.heading }}</a>
+         {% endfor %}
+      </div>
     </div>
 
     <div>

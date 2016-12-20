@@ -84,6 +84,7 @@ def logout():
 @main.route('/article/<int:id>', methods=['POST', 'GET'] )
 def article(id):
     post = Article.query.get_or_404(id)
+    limit_posts = Article.query.order_by(Article.timestamp.desc()).all()[0:5]
     form = CommentForm()
     if form.validate_on_submit():
         comment = Comment(body=form.body.data,
@@ -101,7 +102,7 @@ def article(id):
     comments = pagination.items
 
     return render_template('article.html', posts=[post], form=form,
-                           comments=comments, pagination=pagination)
+                           comments=comments, pagination=pagination, limit_posts=limit_posts)
 
 @main.route('/edit-profile', methods=['POST', 'GET'])
 @login_required
