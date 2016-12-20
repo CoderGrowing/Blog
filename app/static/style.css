@@ -13,6 +13,7 @@ body {
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 60px;
+  font-size: 14px;
   background-color: #2C3132;
 }
 
@@ -31,3 +32,56 @@ code {
   font-size: 80%;
 }
 /*页脚结束*/
+
+
+.navbar-default{
+  background-color: #29B6F6;
+}
+
+/*.navbar-default .navbar-text{*/
+  /*color: white;!important;*/
+/*}*/
+
+.navbar-default .navbar-nav > li > a{
+  color: white;
+}
+
+.navbar-header .navbar-brand > a {
+  color: white; !important;
+}
+
+.navbar-collapse, .navbar-brand, .navbar-right{
+  background-color: #29B6F6;
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  background-color: #0482BA !important;
+  color: white;
+}
+
+/*设置鼠标悬浮时导航颜色*/
+.navbar-nav > li:hover{
+  background-color: #25A3DD;
+}
+
+.article{
+  padding-left: 30px;
+}
+
+.article-body {
+    padding-bottom: 30px;
+}
+
+.footer > .footer-style{
+  background-color: #2C3132;
+}
+
+.text-muted > a{
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.copyright, .footer-link {
+  margin-right: 18px;
+}

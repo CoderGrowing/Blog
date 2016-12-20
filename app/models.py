@@ -11,6 +11,7 @@ class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     heading = db.Column(db.Text)
     body = db.Column(db.Text)
+    preview = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
 
@@ -38,6 +39,7 @@ class Article(db.Model):
             markdown(value, output_format='html'),
             tags=allowed_tags, strip=True
         ))
+        target.preview = target.body_html[0:400]
 
 db.event.listen(Article.body, 'set', Article.on_changed_body)
 

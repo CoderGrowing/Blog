@@ -1,37 +1,21 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
+
 {% block title %}CoderGrowinging{% endblock %}
+
 {% block head %}
-{{ super() }}
-    <link rel="stylesheet" href="{{ url_for("static", filename="blog.css") }}">
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for("static", filename="blog.css") }}">
 {% endblock %}
 
-{% block content %}
-{{ super() }}
+{% block page_content %}
+  {{ super() }}
+  {% include "_article.html" %}
 
-<div class="container">
-<div class="col-sm-8 blog-main">
-<div class="blog-post">
-{#标题#}
-<div>
-    {% for post in posts %}
-        <a href="{{ url_for('.article', id=post.id) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
-        <p class="blog-post-meta">时间:{{ post.timestamp}}</p>
-        {% if post.body_html %}
-            {{ post.body_html | safe }}
-        {% else %}
-            {{ post.body }}
-        {% endif %}
-    {% endfor %}
-
-</div>
-</div>
-</div>
-</div>
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.index') }}
-</div>
-{% endif %}
+  {% if pagination %}
+    <div class="pagination">
+      {{ macros.pagination_widget(pagination, '.index') }}
+    </div>
+  {% endif %}
 {% endblock %}

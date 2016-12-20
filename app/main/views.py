@@ -10,6 +10,8 @@ from flask_login import login_user, login_required, logout_user, current_user
 @main.route('/', methods=['POST', 'GET'])
 def index():
     posts=Article.query.order_by(Article.timestamp.desc()).all()
+    limit_posts=posts[0:3]
+
 
     ##存疑
     page = request.args.get('page', 1, type=int)
@@ -19,7 +21,7 @@ def index():
     #items属性时当前页面的记录
     posts = pagination.items
 
-    return render_template('index.html', posts=posts, pagination=pagination)
+    return render_template('index.html', posts=posts, pagination=pagination, limit_posts=limit_posts)
 
 @main.route('/admin-login', methods=['GET', 'POST'])
 def admin_login():

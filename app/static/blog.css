@@ -5,6 +5,8 @@
 body {
   font-family: Georgia, "Times New Roman", Times, serif;
   color: #555;
+  background-image: url("img.png");
+  /*background: ;*/
 }
 
 h1, .h1,
@@ -26,7 +28,8 @@ h6, .h6 {
 
 @media (min-width: 1200px) {
   .container {
-    width: 970px;
+    width: 1030px;
+    background-color: white;
   }
 }
 
@@ -81,14 +84,17 @@ h6, .h6 {
 .blog-header {
   padding-top: 20px;
   padding-bottom: 20px;
+  padding-left: 30px;
 }
 .blog-title {
   margin-top: 30px;
   margin-bottom: 0;
   font-size: 60px;
   font-weight: normal;
+  display: inline;
 }
 .blog-description {
+  display: inline;
   font-size: 20px;
   color: #999;
 }
@@ -105,8 +111,11 @@ h6, .h6 {
 
 /* Sidebar modules for boxing content */
 .sidebar-module {
+  /*position: absolute;*/
+  /*top: 100px;*/
   padding: 15px;
   margin: 0 -15px 15px;
+  background-color: #f5f5f5;
 }
 .sidebar-module-inset {
   padding: 15px;
@@ -165,6 +174,8 @@ h6, .h6 {
   margin-bottom: 0;
 }
 
+
+/*自加*/
 .blog-post .title-link-style{
   text-decoration: none;
 }
