@@ -69,8 +69,22 @@ code {
   padding-left: 30px;
 }
 
-.article-body {
-    padding-bottom: 30px;
+/*多行隐藏*/
+.hidd {
+  padding-bottom: 30px;
+  position:relative;
+  line-height:1.4em;
+  /* 3 times the line-height to show 3 lines */
+  height:14em;
+  overflow:hidden;
+}
+
+.hidd::after {
+  font-weight:bold;
+  position:absolute;
+  bottom:0;
+  right:0;
+  padding:0 20px 1px 45px;
 }
 
 .footer > .footer-style{

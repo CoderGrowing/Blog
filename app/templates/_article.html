@@ -12,21 +12,30 @@
           <a href="{{ url_for('.article', id=post.id) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
           <p class="blog-post-meta">时间{{ post.timestamp}}</p>
           <div class="article-body">
-            {% if post.body_html %}
-              {{ post.preview | safe}}
-              {% if post.body_html == post.preview %}
-                <a href="{{ url_for('.article', id=post.id) }}" class="btn btn-sm btn-info">评论文章</a>
-                <hr>
-              {% else %}
-                <span>……</span>
-                <br><br>
-               <a href="{{ url_for('.article', id=post.id) }}" class="btn btn-sm btn-info">阅读全文</a>
-                <hr>
-              {% endif %}
-
-            {% else %}
-              {{ post.body }}
-            {% endif %}
+          {% if post.body_html != post.preview %}
+            <div class="hidd">
+              {{ post.body_html | safe}}
+            </div>
+            <div>
+              <span>......</span><br><br>
+              <a href="{{ url_for('.article', id=post.id) }}" class="btn btn-sm btn-info">阅读全文</a>
+              <hr>
+            </div>
+          {% else %}
+            <div>
+              {{ post.body_html | safe}}
+              <br>
+              <a href="{{ url_for('.article', id=post.id) }}" class="btn btn-sm btn-info">评论文章</a>
+              <hr>
+            </div>
+          {% endif %}
+{#            <div>#}
+{#              {% if post.body_html == post.preview %}#}
+{#                #}
+{#              {% else %}#}
+{##}
+{#              {% endif %}#}
+{#            </div>#}
           </div>
         {% endfor %}
       </div>

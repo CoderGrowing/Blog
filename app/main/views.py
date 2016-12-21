@@ -10,7 +10,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 @main.route('/', methods=['POST', 'GET'])
 def index():
     posts=Article.query.order_by(Article.timestamp.desc()).all()
-    limit_posts=posts[0:3]
+    limit_posts=posts[0:5]
 
 
     ##存疑
