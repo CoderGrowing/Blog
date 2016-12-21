@@ -9,7 +9,7 @@
     <div class="blog-post">
       <div class="article">
         {% for post in posts %}
-          <a href="{{ url_for('.article', id=post.id) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
+          <a href="{{ url_for('main.article', id=post.id) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
           <p class="blog-post-meta">时间{{ post.timestamp}}</p>
           <div class="article-body">
           {% if post.body_html != post.preview %}

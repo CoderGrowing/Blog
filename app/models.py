@@ -11,6 +11,7 @@ class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     heading = db.Column(db.Text)
     body = db.Column(db.Text)
+    # article_type = db.Column(db.Text)
     preview = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     comments = db.relationship('Comment', backref='post', lazy='dynamic')

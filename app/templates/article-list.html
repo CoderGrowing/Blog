@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin-nav.css') }}">
+{% endblock %}
+
+{% block page_content %}
+    <div class="container-fluid">
+    {% include "_admin-nav.html" %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <h2 class="sub-header">文章列表</h2>
+       <div class="table-responsive">
+          <table class="table table-striped">
+            <tbody>
+              {% for post in posts %}
+                <tr>
+                  <td>
+                    <a href="{{ url_for('main.edit_article', id=post.id) }}">{{ post.heading }}</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    </div>
+    </div>
+
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}

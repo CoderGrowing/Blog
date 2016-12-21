@@ -5,6 +5,7 @@ from app.main import main
 from .forms import AdminLoginForm, UserLoginForm, RegisterForm, CommentForm, EditProfileForm, ChangePasswordForm
 from app.models import db, Admin, Article, User, Comment
 from flask_login import login_user, login_required, logout_user, current_user
+from datetime import datetime
 
 
 @main.route('/', methods=['POST', 'GET'])
@@ -92,7 +93,7 @@ def article(id):
                           )
         db.session.add(comment)
         flash(u'评论提交成功！')
-        return redirect(url_for('.article', id=post.id, page=-1))
+        return redirect(url_for('main.article', id=post.id, page=-1))
     page = request.args.get('page', 1, type=int)
     if page == -1:
         page = (post.comments.count() - 1) / 20 + 1
@@ -131,10 +132,23 @@ def change_password():
 
     return render_template('change-password.html', form=form)
 
-@main.route('/test')
-def test():
-    return render_template('_admin-nav.html')
+@main.route('/article-list', methods=['POST', 'GET'])
+@login_required
+def article_list():
+    posts = Article.query.order_by(Article.timestamp.desc()).all()
 
+    return render_template('article-list.html', posts=posts)
 
+@main.route('/edit-article/<int:id>', methods=['POST', 'GET'])
+@login_required
+def edit_article(id):
+    post = Article.query.get_or_404(id)
+    if request.method == 'POST':
+        post.heading = request.form['heading']
+        post.body = request.form['article']
+        post.timestamp = datetime.now()
+        db.session.add(post)
+        flash(u'文章修改成功！')
+        return redirect(url_for('main.index'))
 
-
+    return render_template('edit-article.html', post=post, id=id)
