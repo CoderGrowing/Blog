@@ -9,25 +9,24 @@
     <div class="container-fluid">
     {% include "_admin-nav.html" %}
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <h2 class="sub-header">文章列表</h2>
-      <h4>点击文章名称修改文章</h4>
+      <h2 class="sub-header">所有用户列表</h2>
        <div class="table-responsive">
           <table class="table table-striped table-bordered">
             <thead>
               <tr>
-                <th>文章名称</th>
-                <th>创建时间</th>
-                <th>上次修改时间</th>
+                <th>用户名</th>
+                <th>邮箱</th>
+                <th>注册时间</th>
+                <th>用户角色</th>
               </tr>
             </thead>
             <tbody>
-              {% for post in posts %}
+              {% for user in users %}
                 <tr>
-                  <td>
-                    <a href="{{ url_for('main.edit_article', id=post.id) }}">{{ post.heading }}</a>
-                  </td>
-                  <td>{{ post.timestamp }}</td>
-                  <td>{{ post.edit_timestamp }}</td>
+                  <td>{{ user.username }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.timestamp }}</td>
+                  <td>{{ user.role }}</td>
                 </tr>
               {% endfor %}
             </tbody>

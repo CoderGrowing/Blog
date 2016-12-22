@@ -13,11 +13,11 @@ def index():
     page = request.args.get('page', 1, type=int)
 
     if current_user.is_authenticated and current_user.role == 'Admin':
-        pagination = Article.query.order_by(Article.timestamp.desc()).paginate(
-            page, per_page=20, error_out=False)
+        pagination = Article.query.order_by(Article.edit_timestamp.desc()).paginate(
+            page, per_page=10, error_out=False)
     else:
         pagination = Article.query.filter_by(permission='common').\
-            order_by(Article.timestamp.desc()).paginate(page, per_page=20, error_out=False)
+            order_by(Article.edit_timestamp.desc()).paginate(page, per_page=10, error_out=False)
 
     posts = pagination.items
     limit_posts = posts[0:5]
@@ -72,9 +72,19 @@ def article_list():
         flash(u'您没有权限访问该页面！')
         return render_template('index.html')
 
-    posts = Article.query.order_by(Article.timestamp.desc()).all()
+    posts = Article.query.order_by(Article.edit_timestamp.desc()).all()
 
     return render_template('article-list.html', posts=posts)
+
+@main.route('/all-user')
+@login_required
+def all_user():
+    if current_user.role != "Admin":
+        flash(u'您没有权限访问该页面！')
+        return redirect(url_for('main.index'))
+
+    users = User.query.all()
+    return render_template('all-user.html', users=users)
 
 @main.route('/user-login', methods=['GET', 'POST'])
 def user_login():
@@ -115,9 +125,9 @@ def article(id, name):
         return redirect(url_for('main.index'))
 
     if current_user.is_authenticated and current_user.role == 'Admin':
-        limit_posts = Article.query.order_by(Article.timestamp.desc()).all()[0:5]
+        limit_posts = Article.query.order_by(Article.edit_timestamp.desc()).all()[0:5]
     else:
-        limit_posts = Article.query.filter_by(permission='common').order_by(Article.timestamp.desc()).all()[0:5]
+        limit_posts = Article.query.filter_by(permission='common').order_by(Article.edit_timestamp.desc()).all()[0:5]
 
     form = CommentForm()
     if form.validate_on_submit():
@@ -133,7 +143,7 @@ def article(id, name):
     if page == -1:
         page = (post.comments.count() - 1) / 20 + 1
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
-        page, per_page=20, error_out=False
+        page, per_page=10, error_out=False
     )
     comments = pagination.items
 
@@ -144,8 +154,8 @@ def article(id, name):
 def article_type(type):
 
     page = request.args.get('page', 1, type=int)
-    pagination = Article.query.filter_by(article_type=type).order_by(Article.timestamp.desc()).paginate(
-        page, per_page=20, error_out=False)
+    pagination = Article.query.filter_by(article_type=type).order_by(Article.edit_timestamp.desc()).paginate(
+        page, per_page=10, error_out=False)
 
     posts = pagination.items
 

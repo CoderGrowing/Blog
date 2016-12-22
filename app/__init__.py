@@ -9,6 +9,14 @@ from flask_login import LoginManager
 from flask_pagedown import PageDown
 from flask_moment import Moment
 
+import mistune
+from pygments import highlight
+# from pygments.lexers import get_lexer_by_name
+# from pygments.formatters import html
+
+from pygments import lexers
+from pygments import formatters
+
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'main.user_login'
@@ -37,3 +45,15 @@ def create_app(config_name):
     app.register_blueprint(main_blueprint)
 
     return app
+
+class HighlightRenderer(mistune.Renderer):
+    def block_code(self, code, lang):
+        if not lang:
+            return '\n<pre><code>%s</code></pre>\n' % \
+                mistune.escape(code)
+        lexer = lexers.get_lexer_by_name(lang, stripall=True)
+        formatter = formatters.HtmlFormatter()
+        return highlight(code, lexer, formatter)
+
+renderer = HighlightRenderer()
+markdowner = mistune.Markdown(renderer=renderer, hard_wrap=True)

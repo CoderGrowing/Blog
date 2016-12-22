@@ -5,6 +5,8 @@ from datetime import datetime
 from flask_login import UserMixin
 from markdown import markdown
 import bleach
+import mistune
+from . import markdowner
 
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -15,6 +17,7 @@ class Article(db.Model):
     permission = db.Column(db.String(64))
     preview = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
+    edit_timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
 
     body_html = db.Column(db.Text)
@@ -34,14 +37,9 @@ class Article(db.Model):
             db.session.commit()
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p']
-        target.body_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'),
-            tags=allowed_tags, strip=True
-        ))
+        target.body_html = markdowner(value)
         target.preview = target.body_html[0:400]
+
 
 db.event.listen(Article.body, 'set', Article.on_changed_body)
 
@@ -51,6 +49,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     password_hash = db.Column(db.String(128))
     role = db.Column(db.String, default='User')
 
