@@ -10,17 +10,17 @@ from datetime import datetime
 
 @main.route('/', methods=['POST', 'GET'])
 def index():
-    posts=Article.query.order_by(Article.timestamp.desc()).all()
-    limit_posts=posts[0:5]
-
-
-    ##存疑
     page = request.args.get('page', 1, type=int)
-    #参数中的page为自己制定，  此处为加上  ?page=1
-    pagination = Article.query.order_by(Article.timestamp.desc()).paginate(
-        page, per_page=20, error_out=False)
-    #items属性时当前页面的记录
+
+    if current_user.is_authenticated and current_user.role == 'Admin':
+        pagination = Article.query.order_by(Article.timestamp.desc()).paginate(
+            page, per_page=20, error_out=False)
+    else:
+        pagination = Article.query.filter_by(permission='common').\
+            order_by(Article.timestamp.desc()).paginate(page, per_page=20, error_out=False)
+
     posts = pagination.items
+    limit_posts = posts[0:5]
 
     return render_template('index.html', posts=posts, pagination=pagination, limit_posts=limit_posts)
 
@@ -41,7 +41,7 @@ def write_article():
         return render_template('index.html')
     if request.method == 'POST':
         article = Article(heading=request.form['heading'], body=request.form['article'],
-                          article_type=request.form['article_type'])
+                          article_type=request.form['article_type'], permission=request.form['permission'])
         db.session.add(article)
         return redirect(url_for('main.index'))
 
@@ -135,12 +135,11 @@ def article(id):
 
 @main.route('/article-type/<string:type>')
 def article_type(type):
-    posts = Article.query.filter_by(article_type=type).first_or_404()
 
     page = request.args.get('page', 1, type=int)
     pagination = Article.query.filter_by(article_type=type).order_by(Article.timestamp.desc()).paginate(
         page, per_page=20, error_out=False)
-    # items属性时当前页面的记录
+
     posts = pagination.items
 
     return render_template('article-type.html', posts=posts, pagination=pagination)

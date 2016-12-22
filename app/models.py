@@ -12,6 +12,7 @@ class Article(db.Model):
     heading = db.Column(db.Text)
     body = db.Column(db.Text)
     article_type = db.Column(db.Text)
+    permission = db.Column(db.String(64))
     preview = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
