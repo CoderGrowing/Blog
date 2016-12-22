@@ -5,8 +5,10 @@
 body {
   font-family: Georgia, "Times New Roman", Times, serif;
   color: #555;
-  background-image: url("img.png");
-  /*background: ;*/
+  /*background-image: url("img.png");*/
+  background-color: #FFF;
+  background-image: url("https://www.transparenttextures.com/patterns/black-felt.png");
+/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
 }
 
 h1, .h1,
@@ -30,6 +32,7 @@ h6, .h6 {
   .container {
     width: 1030px;
     background-color: white;
+
   }
 }
 
@@ -50,7 +53,8 @@ h6, .h6 {
   display: inline-block;
   padding: 10px;
   font-weight: 500;
-  color: #cdddeb;
+  /*color: #cdddeb;*/
+  color: #DDF0Ed;
 }
 .blog-nav-item:hover,
 .blog-nav-item:focus {
@@ -158,11 +162,9 @@ h6, .h6 {
   color: #999;
 }
 
-
 /*
  * Footer
  */
-
 .blog-footer {
   padding: 40px 0;
   color: #999;

@@ -11,7 +11,7 @@ from flask_moment import Moment
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
-login_manager.login_view = 'main.admin_login'
+login_manager.login_view = 'main.user_login'
 
 bootstrap = Bootstrap()
 mail = Mail()
