@@ -19,7 +19,7 @@
     {#标题#}
     <div>
         {% for post in posts %}
-            <a href="{{ url_for('.article', id=post.id) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
+            <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
             <p class="blog-post-meta">时间:{{ post.timestamp}}</p>
             {% if post.body_html %}
                 {{ post.body_html | safe }}
@@ -36,7 +36,7 @@
           最近文章
         </p>
          {% for po in limit_posts %}
-           <a href="{{ url_for('.article', id=po.id) }}" class="list-group-item title-link-style">{{ po.heading }}</a>
+           <a href="{{ url_for('.article', id=po.id, name=po.heading) }}" class="list-group-item title-link-style">{{ po.heading }}</a>
          {% endfor %}
       </div>
     </div>
@@ -44,7 +44,7 @@
     <div>
         {{ wtf.quick_form(form) }}
     </div>
-     <a href="{{ url_for('.article', id=post.id) }}#comments">
+     <a href="{{ url_for('.article', id=post.id, name=post.heading) }}#comments">
     <span class="label label-primary">
         {{ post.comments.count() }} 评论
     </span>

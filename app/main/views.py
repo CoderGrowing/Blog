@@ -106,19 +106,26 @@ def logout():
     flash(u'注销成功！')
     return redirect(url_for('main.index'))
 
-@main.route('/article/<int:id>', methods=['POST', 'GET'] )
-def article(id):
-    post = Article.query.get_or_404(id)
-    limit_posts = Article.query.order_by(Article.timestamp.desc()).all()[0:5]
+@main.route('/article/<int:id>/<string:name>', methods=['POST', 'GET'] )
+def article(id, name):
+    if Article.query.get(id) and Article.query.filter_by(heading=name).first():
+        post = Article.query.get_or_404(id)
+    else:
+        flash(u'您要找的文章不存在！')
+        return redirect(url_for('main.index'))
+
+    if current_user.is_authenticated and current_user.role == 'Admin':
+        limit_posts = Article.query.order_by(Article.timestamp.desc()).all()[0:5]
+    else:
+        limit_posts = Article.query.filter_by(permission='common').order_by(Article.timestamp.desc()).all()[0:5]
+
     form = CommentForm()
     if form.validate_on_submit():
         if current_user.is_authenticated:
-            comment = Comment(body=form.body.data,
-                              post=post,
-                              )
+            comment = Comment(body=form.body.data,post=post)
             db.session.add(comment)
             flash(u'评论提交成功！')
-            return redirect(url_for('main.article', id=post.id, page=-1))
+            return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
         flash(u'请先登录后再进行评论！')
         return redirect(url_for('main.user_login'))
 
