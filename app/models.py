@@ -11,7 +11,7 @@ class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     heading = db.Column(db.Text)
     body = db.Column(db.Text)
-    # article_type = db.Column(db.Text)
+    article_type = db.Column(db.Text)
     preview = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
@@ -45,26 +45,6 @@ class Article(db.Model):
 db.event.listen(Article.body, 'set', Article.on_changed_body)
 
 
-# class Role(db.Model):
-#     __tablename__ = 'role'
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(64), unique=True)
-#     default = db.Column(db.Boolean, default=False, index=True)
-#     permissions = db.Column(db.Integer)
-#     users = db.relationship('User', backref='role', lazy='dynamic')
-
-#     @staticmethod
-#     def insert_role():
-#         role = {
-#             'User': (Permission.USER, True)
-#             'Admin': (0xff, False)
-#         }
-#
-#
-# class Permission:
-#     USER = 0X01
-#     ADMIN = 0X80
-
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -73,10 +53,6 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     role = db.Column(db.String, default='User')
 
-    # def __init__(self, **kwargs):
-    #     super(User, self).__init__(**kwargs)
-    #     if self.role is None:
-    #         self.role = Role.query.filter_by(default=True).first()
 
     @property
     def password(self):

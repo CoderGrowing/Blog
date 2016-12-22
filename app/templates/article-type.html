@@ -1,10 +1,22 @@
-<div class="blog-header">
-  <h1 class="blog-title">CoderGrowing</h1>
-  <p class="lead blog-description">随笔随心</p>
-  <hr>
-</div>
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 
-<div class="row">
+{% block title %}笔记{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for("static", filename="blog.css") }}">
+{% endblock %}
+
+{% block page_content %}
+  {{ super() }}
+  <div class="blog-header">
+    <h1 class="blog-title">CoderGrowing</h1>
+    <p class="lead blog-description">随笔随心</p>
+    <hr>
+  </div>
+  <div class="row">
   <div class="col-sm-8 blog-main">
     <div class="blog-post">
       <div class="article">
@@ -18,7 +30,7 @@
             </div>
             <div>
               <span>......</span><br><br>
-              <a href="{{ url_for('.article', id=post.id) }}" class="btn btn-sm btn-info">阅读全文</a>
+              <a href="{{ url_for('main.article', id=post.id) }}" class="btn btn-sm btn-info">阅读全文</a>
               <hr>
             </div>
           {% else %}
@@ -45,4 +57,11 @@
        {% endfor %}
     </div>
   </div><!-- /.col-sm-4 -->
-</div>
+  </div>
+
+  {% if pagination %}
+    <div class="pagination">
+      {{ macros.pagination_widget(pagination, '.index') }}
+    </div>
+  {% endif %}
+{% endblock %}

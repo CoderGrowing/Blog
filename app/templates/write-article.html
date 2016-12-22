@@ -14,8 +14,26 @@
     {% include "_admin-nav.html" %}
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <h3 class="page-header">写点什么呢？</h3>
-        <form method="POST" action="{{ url_for('main.write_article') }}">
-        <input type="text" name="heading" class="form-control" placeholder="标题" required="required">
+        <form method="POST" action="{{ url_for('main.write_article') }}" class="form-horizontal">
+          <div class="row">
+{#            <div class="col-sm-6">#}
+{#              <input type="text" name="heading" class="form-control" placeholder="标题" required="required">#}
+{#            </div>#}
+            <div class="form-group">
+              <div class="col-sm-6">
+                <input type="text" name="heading" class="form-control" placeholder="标题" required="required">
+              </div>
+              <div class="col-sm-2">
+                <label class="control-label">请选择文章分类：</label>
+              </div>
+              <div class="col-sm-4">
+                <select name="article_type" class="form-control form-inline" >
+                  <option value ="note">笔记</option>
+                  <option value="book_movie">书影</option>
+                  <option value="talk_nonsense">扯淡</option>
+                </select>
+              </div>
+          </div>
         <textarea id="clear" name="article" placeholder="正文" class="form-control"></textarea>
         <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
         </form>

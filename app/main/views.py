@@ -40,7 +40,8 @@ def write_article():
         flash(u'您没有权限访问该页面！')
         return render_template('index.html')
     if request.method == 'POST':
-        article = Article(heading=request.form['heading'], body=request.form['article'])
+        article = Article(heading=request.form['heading'], body=request.form['article'],
+                          article_type=request.form['article_type'])
         db.session.add(article)
         return redirect(url_for('main.index'))
 
@@ -131,6 +132,19 @@ def article(id):
 
     return render_template('article.html', posts=[post], form=form,
                            comments=comments, pagination=pagination, limit_posts=limit_posts)
+
+@main.route('/article-type/<string:type>')
+def article_type(type):
+    posts = Article.query.filter_by(article_type=type).first_or_404()
+
+    page = request.args.get('page', 1, type=int)
+    pagination = Article.query.filter_by(article_type=type).order_by(Article.timestamp.desc()).paginate(
+        page, per_page=20, error_out=False)
+    # items属性时当前页面的记录
+    posts = pagination.items
+
+    return render_template('article-type.html', posts=posts, pagination=pagination)
+
 
 @main.route('/edit-profile', methods=['POST', 'GET'])
 @login_required

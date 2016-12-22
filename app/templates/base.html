@@ -20,9 +20,9 @@
     </div>
     <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-            <li><a href="#">笔记</a></li>
-            <li><a href="#">书影</a></li>
-            <li><a href="#">扯淡</a></li>
+            <li><a href="{{ url_for('main.article_type', type='note') }}">笔记</a></li>
+            <li><a href="{{ url_for('main.article_type', type='book_movie') }}">书影</a></li>
+            <li><a href="{{ url_for('main.article_type', type='talk_nonsense') }}">扯淡</a></li>
             <li><a href="#">留言板</a></li>
             <li><a href="#">关于</a></li>
         </ul>
