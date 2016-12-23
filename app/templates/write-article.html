@@ -44,7 +44,9 @@
             </label>
           </div>
           <br>
-          <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
+          <input type="submit" class="btn btn-lg-4 btn-primary" value="提交"
+             onclick="wordCount()">
+          <input type="hidden" id="word-count" name="word-count">
         </form>
     </div>
     </div>
@@ -54,6 +56,9 @@
         uniqueId: "MyUniqueID",
         delay: 100
     }});
+  function wordCount() {
+      document.getElementById('word-count').value = document.getElementsByClassName("words")[0].innerHTML
+  }
 
   </script>
 

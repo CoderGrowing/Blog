@@ -14,7 +14,7 @@ class Article(db.Model):
     article_len = db.Column(db.Integer)
     permission = db.Column(db.String(64))
     timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
-    edit_timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
+    edit_timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
 
     body_html = db.Column(db.Text)

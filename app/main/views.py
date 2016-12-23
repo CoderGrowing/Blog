@@ -29,7 +29,7 @@ def index():
 def admin():
     if current_user.role != "Admin":
         flash(u'您没有权限访问该页面！')
-        return render_template('index.html')
+        return redirect(url_for('main.index'))
     else:
         return render_template('admin.html')
 
@@ -38,13 +38,14 @@ def admin():
 def write_article():
     if current_user.role != "Admin":
         flash(u'您没有权限访问该页面！')
-        return render_template('index.html')
+        return redirect(url_for('main.index'))
     if request.method == 'POST':
         article = Article(heading=request.form['heading'], body=request.form['article'],
-                          article_type=request.form['article_type'], permission=request.form['permission']
+                          article_type=request.form['article_type'], permission=request.form['permission'],
+                          article_len=request.form['word-count']
                           )
-        article.article_len = len(article.body)
         db.session.add(article)
+        flash(u'文章提交成功！')
         return redirect(url_for('main.index'))
 
     return render_template('write-article.html')
@@ -54,13 +55,14 @@ def write_article():
 def edit_article(id):
     if current_user.role != "Admin":
         flash(u'您没有权限访问该页面！')
-        return render_template('index.html')
+        return redirect(url_for('main.index'))
 
     post = Article.query.get_or_404(id)
     if request.method == 'POST':
         post.heading = request.form['heading']
         post.body = request.form['article']
-        post.timestamp = datetime.now()
+        post.edit_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+        post.article_len = request.form['word-count']
         db.session.add(post)
         flash(u'文章修改成功！')
         return redirect(url_for('main.index'))
@@ -72,7 +74,7 @@ def edit_article(id):
 def article_list():
     if current_user.role != "Admin":
         flash(u'您没有权限访问该页面！')
-        return render_template('index.html')
+        return redirect(url_for('main.index'))
 
     posts = Article.query.order_by(Article.edit_timestamp.desc()).all()
 

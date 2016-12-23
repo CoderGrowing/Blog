@@ -15,7 +15,8 @@
         <form method="POST" action="{{ url_for('main.edit_article', id=post.id) }}">
         <input type="text" name="heading" class="form-control" placeholder="标题" required="required" value="{{ post.heading }}">
         <textarea id="clear" name="article" placeholder="正文" class="form-control">{{ post.body }}</textarea>
-        <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
+        <input type="submit" class="btn btn-lg-4 btn-primary" value="提交"  onclick="wordCount()">
+        <input type="hidden" id="word-count" name="word-count">
         </form>
     </div>
     </div>
@@ -24,6 +25,9 @@
   var simplemde = new SimpleMDE({
     spellChecker:false
     });
+  function wordCount() {
+      document.getElementById('word-count').value = document.getElementsByClassName("words")[0].innerHTML
+  }
   </script>
 
 
