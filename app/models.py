@@ -3,9 +3,6 @@ from . import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_login import UserMixin
-from markdown import markdown
-import bleach
-import mistune
 from . import markdowner
 
 class Article(db.Model):
@@ -14,9 +11,9 @@ class Article(db.Model):
     heading = db.Column(db.Text)
     body = db.Column(db.Text)
     article_type = db.Column(db.Text)
+    article_len = db.Column(db.Integer)
     permission = db.Column(db.String(64))
-    preview = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
+    timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     edit_timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
 

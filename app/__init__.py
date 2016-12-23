@@ -11,8 +11,6 @@ from flask_moment import Moment
 
 import mistune
 from pygments import highlight
-# from pygments.lexers import get_lexer_by_name
-# from pygments.formatters import html
 
 from pygments import lexers
 from pygments import formatters

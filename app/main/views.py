@@ -22,7 +22,7 @@ def index():
     posts = pagination.items
     limit_posts = posts[0:5]
 
-    return render_template('index.html', posts=posts, pagination=pagination, limit_posts=limit_posts)
+    return render_template('index.html', posts=posts, pagination=pagination, limit_posts=limit_posts, )
 
 @main.route('/admin', methods=['POST', 'GET'])
 @login_required
@@ -41,7 +41,9 @@ def write_article():
         return render_template('index.html')
     if request.method == 'POST':
         article = Article(heading=request.form['heading'], body=request.form['article'],
-                          article_type=request.form['article_type'], permission=request.form['permission'])
+                          article_type=request.form['article_type'], permission=request.form['permission']
+                          )
+        article.article_len = len(article.body)
         db.session.add(article)
         return redirect(url_for('main.index'))
 
@@ -154,12 +156,19 @@ def article(id, name):
 def article_type(type):
 
     page = request.args.get('page', 1, type=int)
-    pagination = Article.query.filter_by(article_type=type).order_by(Article.edit_timestamp.desc()).paginate(
-        page, per_page=10, error_out=False)
-
+    if current_user.is_authenticated and current_user.role == 'Admin':
+        pagination = Article.query.filter_by(article_type=type).order_by(Article.edit_timestamp.desc()).\
+            paginate(page, per_page=10, error_out=False)
+        limit_posts = Article.query.order_by(Article.edit_timestamp.desc()).all()[0:5]
+    else:
+        pagination = Article.query.filter_by(article_type=type, permission='common').\
+            order_by(Article.edit_timestamp.desc()).paginate(page, per_page=10, error_out=False)
+        limit_posts = Article.query.filter_by(permission='common').\
+        order_by(Article.edit_timestamp.desc()).all()[0:5]
     posts = pagination.items
 
-    return render_template('article-type.html', posts=posts, pagination=pagination)
+
+    return render_template('article-type.html',type=type, posts=posts, pagination=pagination, limit_posts=limit_posts)
 
 
 @main.route('/edit-profile', methods=['POST', 'GET'])

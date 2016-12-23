@@ -2,7 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 
-{% block title %}笔记{% endblock %}
+{% block title %}{{ type }}{% endblock %}
 
 {% block head %}
   {{ super() }}
@@ -10,54 +10,7 @@
 {% endblock %}
 
 {% block page_content %}
-  {{ super() }}
-  <div class="blog-header">
-    <h1 class="blog-title">CoderGrowing</h1>
-    <p class="lead blog-description">随笔随心</p>
-    <hr>
-  </div>
-  <div class="row">
-  <div class="col-sm-8 blog-main">
-    <div class="blog-post">
-      <div class="article">
-        {% for post in posts %}
-          <a href="{{ url_for('main.article', id=post.id, name=post.name) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
-          <p class="blog-post-meta">时间{{ post.timestamp}}</p>
-          <div class="article-body">
-          {% if post.body_html != post.preview %}
-            <div class="hidd">
-              {{ post.body_html | safe}}
-            </div>
-            <div>
-              <span>......</span><br><br>
-              <a href="{{ url_for('main.article', id=post.id, name=post.name) }}" class="btn btn-sm btn-info">阅读全文</a>
-              <hr>
-            </div>
-          {% else %}
-            <div>
-              {{ post.body_html | safe}}
-              <br>
-              <a href="{{ url_for('.article', id=post.id, name=post.name) }}" class="btn btn-sm btn-info">评论文章</a>
-              <hr>
-            </div>
-          {% endif %}
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  </div>{#  div blog-main#}
-
-  <div class="col-sm-4">
-    <div class="list-group">
-      <p class="list-group-item active">
-        最近文章
-      </p>
-       {% for post in limit_posts %}
-         <a href="{{ url_for('.article', id=post.id, name=post.name) }}" class="list-group-item title-link-style">{{ post.heading }}</a>
-       {% endfor %}
-    </div>
-  </div><!-- /.col-sm-4 -->
-  </div>
+  {% include "_article.html" %}
 
   {% if pagination %}
     <div class="pagination">

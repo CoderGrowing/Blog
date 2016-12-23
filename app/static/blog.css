@@ -158,7 +158,8 @@ h6, .h6 {
   font-size: 32px;
 }
 .blog-post-meta {
-  margin-bottom: 20px;
+  font-size: 12px;
+  padding-top: 10px;
   color: #999;
 }
 
@@ -180,4 +181,8 @@ h6, .h6 {
 /*自加*/
 .blog-post .title-link-style{
   text-decoration: none;
+}
+
+.article-body{
+  padding-top: 10px;
 }

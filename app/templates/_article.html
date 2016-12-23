@@ -9,10 +9,12 @@
     <div class="blog-post">
       <div class="article">
         {% for post in posts %}
-          <a href="{{ url_for('main.article', id=post.id, name=post.heading) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
-          <p class="blog-post-meta">时间{{ post.timestamp}}</p>
+          <a href="{{ url_for('main.article', id=post.id, name=post.heading) }}" class="blog-post-title title-link-style">{{ post.heading }}</a><br>
+          <span class="blog-post-meta">分类: <a href="{{ url_for('main.article_type', type=post.article_type) }}">{{ post.article_type }}</a></span>
+          <span class="blog-post-meta"> | 时间:{{ post.timestamp}}</span>
+          <span class="blog-post-meta"> | 字数: {{ post.article_len }}</span><br>
           <div class="article-body">
-          {% if post.body_html != post.preview %}
+          {% if post.article_len > 400 %}
             <div class="hidd">
               {{ post.body_html | safe}}
             </div>
