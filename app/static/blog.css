@@ -6,8 +6,11 @@ body {
   font-family: Georgia, "Times New Roman", Times, serif;
   color: #555;
   /*background-image: url("img.png");*/
-  background-color: #FFF;
-  background-image: url("https://www.transparenttextures.com/patterns/black-felt.png");
+  /*background-color: #FFF;*/
+  /*background-image: url("https://www.transparenttextures.com/patterns/black-felt.png");*/
+/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+background-color: #f5f5f5;
+background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
 /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
 }
 
@@ -185,4 +188,26 @@ h6, .h6 {
 
 .article-body{
   padding-top: 10px;
+}
+
+.article-border{
+  border-bottom:3px double;
+  border-color: #EDEDED;
+  padding-bottom: 40px;
+  padding-top: 40px;
+}
+
+.comment-border{
+  border: 7px solid;
+  border-color: #F1F1F1;
+}
+
+.comment{
+  list-style: none;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.comments{
+  padding-left: 0;
 }

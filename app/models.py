@@ -4,6 +4,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_login import UserMixin
 from . import markdowner
+import hashlib
+from flask import request
+
+
 
 class Article(db.Model):
     __tablename__ = 'articles'
@@ -11,11 +15,12 @@ class Article(db.Model):
     heading = db.Column(db.Text)
     body = db.Column(db.Text)
     article_type = db.Column(db.Text)
+    article_tags = db.Column(db.Text)
     article_len = db.Column(db.Integer)
     permission = db.Column(db.String(64))
     timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     edit_timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
-    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+    comments = db.relationship('Comment', backref='article', lazy='dynamic')
 
     body_html = db.Column(db.Text)
 
@@ -46,8 +51,10 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
+    timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     password_hash = db.Column(db.String(128))
+    avatar_hash = db.Column(db.String(32))
+    comments = db.relationship('Comment', backref='user', lazy='dynamic')
     role = db.Column(db.String, default='User')
 
 
@@ -65,20 +72,25 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        if request.is_secure:
+            url = 'https://secure.gravatar.com/avatar'
+        else:
+            url = 'http://www.gravatar.com/avatar'
+        hash = self.avatar_hash or hashlib.md5(self.email.encode('utf-8')).hexdigest()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url, hash=hash, size=size, default=default, rating=rating
+        )
+
 
 class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
+    timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     disabled = db.Column(db.Boolean)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     article_id = db.Column(db.Integer, db.ForeignKey('articles.id'))
-
-
-
-@login_manager.user_loader
-def load_admin(admin_id):
-    return Admin.query.get(int(admin_id))
 
 @login_manager.user_loader
 def load_user(user_id):

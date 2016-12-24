@@ -6,6 +6,7 @@ from .forms import UserLoginForm, RegisterForm, CommentForm, EditProfileForm, Ch
 from app.models import db, Article, User, Comment
 from flask_login import login_user, login_required, logout_user, current_user
 from datetime import datetime
+import hashlib
 
 
 @main.route('/', methods=['POST', 'GET'])
@@ -15,6 +16,8 @@ def index():
     if current_user.is_authenticated and current_user.role == 'Admin':
         pagination = Article.query.order_by(Article.edit_timestamp.desc()).paginate(
             page, per_page=10, error_out=False)
+        article_tag = Article.query.all()
+        print article_tag[0].article_tags
     else:
         pagination = Article.query.filter_by(permission='common').\
             order_by(Article.edit_timestamp.desc()).paginate(page, per_page=10, error_out=False)
@@ -42,7 +45,7 @@ def write_article():
     if request.method == 'POST':
         article = Article(heading=request.form['heading'], body=request.form['article'],
                           article_type=request.form['article_type'], permission=request.form['permission'],
-                          article_len=request.form['word-count']
+                          article_len=request.form['word-count'], article_tags=request.form['tag-name']
                           )
         db.session.add(article)
         flash(u'文章提交成功！')
@@ -108,6 +111,7 @@ def register():
         user = User(email=form.email.data,
                     username=form.username.data,
                     password=form.password.data)
+        user.avatar_hash = hashlib.md5(user.email.encode('utf-8')).hexdigest()
         db.session.add(user)
         flash(u'注册成功！')
         return redirect(url_for('main.user_login'))
@@ -136,7 +140,7 @@ def article(id, name):
     form = CommentForm()
     if form.validate_on_submit():
         if current_user.is_authenticated:
-            comment = Comment(body=form.body.data,post=post)
+            comment = Comment(body=form.body.data,article_id=post.id, user_id=current_user._get_current_object().id)
             db.session.add(comment)
             flash(u'评论提交成功！')
             return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
@@ -151,7 +155,7 @@ def article(id, name):
     )
     comments = pagination.items
 
-    return render_template('article.html', posts=[post], form=form,
+    return render_template('article.html', post=post, form=form,
                            comments=comments, pagination=pagination, limit_posts=limit_posts)
 
 @main.route('/article-type/<string:type>')

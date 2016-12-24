@@ -2,8 +2,9 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for("static", filename="blog.css")}}">
+  {{ super() }}
+{#  <link rel="stylesheet" href="{{ url_for("static", filename="flat-ui.min.css") }}">#}
+  <link rel="stylesheet" href="{{ url_for("static", filename="blog.css")}}">
 {% endblock %}
 
 {% block title %} 文章 {% endblock %}
@@ -14,23 +15,26 @@
     <p class="lead blog-description">随笔随心</p>
     <hr>
   </div>
-    <div class="col-sm-8 blog-main">
+    <div class="col-sm-9 blog-main">
     <div class="blog-post">
     {#标题#}
     <div>
-        {% for post in posts %}
-            <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
-            <p class="blog-post-meta">时间:{{ post.timestamp}}</p>
-            {% if post.body_html %}
-                {{ post.body_html | safe }}
-            {% else %}
-                {{ post.body }}
-            {% endif %}
-
+      <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
+      <p class="blog-post-meta">时间:{{ post.timestamp}}</p>
+      {% if post.body_html %}
+        {{ post.body_html | safe }}
+      {% else %}
+        {{ post.body }}
+      {% endif %}
     </div>
+    </div><hr>
+    {% if post.comments.count() == 0 %}
+          <div class="alert alert-success">还没有评论哦，还不快来抢沙发~</div>
+        {% else %}
+          <div class="label label-primary">已有{{ post.comments.count() }}条评论</div>
+        {% endif %}
     </div>
-    </div>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <div class="list-group">
         <p class="list-group-item active">
           最近文章
@@ -41,25 +45,28 @@
       </div>
     </div>
 
+      <div class="comment-border col-sm-9">
+        <ul class="comments"  id="comment">
+          {% for comment in comments %}
+          <li class="comment">
+            <div class="comment-content well">
+              <img class="img-rounded profile-thumbnail" src="{{ comment.user.gravatar(size=40) }}">
+              <span> {{ comment.user.username }} </span>
+              <div class="comment-body">
+                      {{ comment.body }}
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
     <div>
         {{ wtf.quick_form(form) }}
     </div>
-     <a href="{{ url_for('.article', id=post.id, name=post.heading) }}#comments">
-    <span class="label label-primary">
-        {{ post.comments.count() }} 评论
-    </span>
-    </a>
-    <ul class="comments">
-    {% for comment in comments %}
-    <li class="comment">
-        <div class="comment-content">
-            <div class="comment-body">
-                    {{ comment.body }}
-            </div>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
-{% endfor %}
+{% endblock %}
 
+{% block scripts %}
+  {{ super() }}
+{#  <script src="{{ url_for("static", filename="flat-ui.min.js") }}"></script>#}
+{#  <script src="{{ url_for("static", filename="jquery.min.js") }}"></script>#}
 {% endblock %}

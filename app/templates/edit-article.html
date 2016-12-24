@@ -15,8 +15,20 @@
         <form method="POST" action="{{ url_for('main.edit_article', id=post.id) }}">
         <input type="text" name="heading" class="form-control" placeholder="标题" required="required" value="{{ post.heading }}">
         <textarea id="clear" name="article" placeholder="正文" class="form-control">{{ post.body }}</textarea>
+        <div class="radio">
+            <label>
+              <input type="radio" name="permission" value="common">
+              公开
+            </label>
+            <label>
+              <input type="radio" name="permission" value="private">
+              仅自己可见
+            </label>
+          </div><br>
+
         <input type="submit" class="btn btn-lg-4 btn-primary" value="提交"  onclick="wordCount()">
         <input type="hidden" id="word-count" name="word-count">
+          <input type="hidden" id="get-permission" value={{ post.permission }}>
         </form>
     </div>
     </div>
@@ -25,11 +37,18 @@
   var simplemde = new SimpleMDE({
     spellChecker:false
     });
+
+  var a = document.getElementsByName("permission");
+
+  for(var i = 0; i <= a.length; i++){
+    if (a[i].value == document.getElementById("get-permission").value){
+      a[i].checked = "checked";
+    }
+  }
   function wordCount() {
       document.getElementById('word-count').value = document.getElementsByClassName("words")[0].innerHTML
   }
   </script>
-
 
 {% endblock %}
 

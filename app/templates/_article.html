@@ -5,10 +5,11 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-8 blog-main">
+  <div class="col-sm-9 blog-main">
     <div class="blog-post">
       <div class="article">
         {% for post in posts %}
+          <div class="article-border">
           <a href="{{ url_for('main.article', id=post.id, name=post.heading) }}" class="blog-post-title title-link-style">{{ post.heading }}</a><br>
           <span class="blog-post-meta">分类: <a href="{{ url_for('main.article_type', type=post.article_type) }}">{{ post.article_type }}</a></span>
           <span class="blog-post-meta"> | 时间:{{ post.timestamp}}</span>
@@ -21,23 +22,25 @@
             <div>
               <span>......</span><br><br>
               <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="btn btn-sm btn-info">阅读全文</a>
-              <hr>
             </div>
           {% else %}
             <div>
               {{ post.body_html | safe}}
               <br>
-              <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="btn btn-sm btn-info">评论文章</a>
-              <hr>
+              <a href="{{ url_for('.article', id=post.id, name=post.heading) }}#comment" class="btn btn-sm btn-info">评论文章</a>
             </div>
           {% endif %}
+          </div>
           </div>
         {% endfor %}
       </div>
     </div>
   </div>{#  div blog-main#}
 
-  <div class="col-sm-4">
+  <div class="col-sm-3">
+    <div class="article-tags">
+
+    </div>
     <div class="list-group">
       <p class="list-group-item active">
         最近文章
@@ -46,5 +49,5 @@
          <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="list-group-item title-link-style">{{ post.heading }}</a>
        {% endfor %}
     </div>
-  </div><!-- /.col-sm-4 -->
+  </div><!-- /.col-sm-3 -->
 </div>
