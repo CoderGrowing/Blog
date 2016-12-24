@@ -15,7 +15,6 @@ class Article(db.Model):
     heading = db.Column(db.Text)
     body = db.Column(db.Text)
     article_type = db.Column(db.Text)
-    article_tags = db.Column(db.Text)
     article_len = db.Column(db.Integer)
     permission = db.Column(db.String(64))
     timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))

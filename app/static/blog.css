@@ -3,6 +3,8 @@
  */
 
 body {
+  padding-top: 100px;
+  padding-bottom: 80px;
   font-family: Georgia, "Times New Roman", Times, serif;
   color: #555;
   /*background-image: url("img.png");*/
@@ -31,11 +33,13 @@ h6, .h6 {
  * Override Bootstrap's default container.
  */
 
+#top{
+  margin-bottom: 200px;
+}
 @media (min-width: 1200px) {
   .container {
     width: 1030px;
     background-color: white;
-
   }
 }
 
@@ -200,6 +204,8 @@ h6, .h6 {
 .comment-border{
   border: 7px solid;
   border-color: #F1F1F1;
+  margin-bottom: 70px;
+  padding-bottom: 50px;
 }
 
 .comment{
@@ -211,3 +217,15 @@ h6, .h6 {
 .comments{
   padding-left: 0;
 }
+
+.username{
+  padding-left: 10px;
+  font-size: 15px;
+  color: #0000cc;
+}
+
+.comment-body{
+  padding-top: 20px;
+  padding-left: 70px;
+}
+

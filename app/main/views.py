@@ -16,8 +16,6 @@ def index():
     if current_user.is_authenticated and current_user.role == 'Admin':
         pagination = Article.query.order_by(Article.edit_timestamp.desc()).paginate(
             page, per_page=10, error_out=False)
-        article_tag = Article.query.all()
-        print article_tag[0].article_tags
     else:
         pagination = Article.query.filter_by(permission='common').\
             order_by(Article.edit_timestamp.desc()).paginate(page, per_page=10, error_out=False)
@@ -45,7 +43,7 @@ def write_article():
     if request.method == 'POST':
         article = Article(heading=request.form['heading'], body=request.form['article'],
                           article_type=request.form['article_type'], permission=request.form['permission'],
-                          article_len=request.form['word-count'], article_tags=request.form['tag-name']
+                          article_len=request.form['word-count']
                           )
         db.session.add(article)
         flash(u'文章提交成功！')
