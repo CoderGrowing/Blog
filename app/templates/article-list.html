@@ -27,8 +27,8 @@
                   <td>
                     <a href="{{ url_for('main.edit_article', id=post.id) }}">{{ post.heading }}</a>
                   </td>
-                  <td>{{ post.timestamp }}</td>
-                  <td>{{ post.edit_timestamp }}</td>
+                  <td>{{ post.timestamp[0:16] }}</td>
+                  <td>{{ post.edit_timestamp[0:16] }}</td>
                 </tr>
               {% endfor %}
             </tbody>

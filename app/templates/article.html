@@ -18,7 +18,7 @@
     <div class="blog-post">
     <div>
       <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
-      <p class="blog-post-meta">时间:{{ post.timestamp}}</p>
+      <p class="blog-post-meta">时间:{{ post.timestamp[0:16]}}</p>
       {% if post.body_html %}
         {{ post.body_html | safe }}
       {% else %}
@@ -50,7 +50,7 @@
             <div class="comment-content well">
               <img class="img-rounded profile-thumbnail" src="{{ comment.user.gravatar(size=40) }}">
               <span class="username"> {{ comment.user.username }} </span>
-              <span class="time">{{ comment.timestamp }}</span>
+              <span class="time">{{ comment.timestamp[0:16] }}</span>
               <div class="comment-body row">
                       {{ comment.body }}
               </div>
