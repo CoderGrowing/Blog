@@ -52,15 +52,34 @@
               <span class="username"> {{ comment.user.username }} </span>
               <span class="time">{{ comment.timestamp[0:16] }}</span>
               <div class="comment-body row">
-                      {{ comment.body }}
+                {{ comment.body }}
+                <div class="reply-comment">
+				          <a data-toggle="collapse" data-parent="#accordion" class="label label-primary"
+				            href="#{{ comment.id }}">回复</a>
+                  <div id="{{ comment.id }}" class="collapse">
+                    <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
+                  <div>
+            <textarea rows="9" cols="50"  class="form-control textarea" required="required"></textarea>
+          </div>
+          <br>
+          <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
+        </form>
+                  </div>
+		            </div>
               </div>
             </div>
           </li>
           {% endfor %}
         </ul>
+          <p class="lead">来都来了，留下点什么再走呗~</p>
+          <p class="label label-default">写下你的评论</p>
+        <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
           <div>
-            {{ wtf.quick_form(form) }}
+            <textarea rows="9" cols="50"  class="form-control textarea" required="required"></textarea>
           </div>
+          <br>
+          <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
+        </form>
       </div>
 {% endblock %}
 

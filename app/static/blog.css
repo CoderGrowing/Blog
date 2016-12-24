@@ -229,3 +229,7 @@ h6, .h6 {
   padding-left: 70px;
 }
 
+.comment-input{
+  width: 300px;
+  height: 180px;
+}

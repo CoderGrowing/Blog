@@ -62,7 +62,7 @@ def edit_article(id):
     if request.method == 'POST':
         post.heading = request.form['heading']
         post.body = request.form['article']
-        post.edit_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+        post.edit_timestamp = datetime.now
         post.article_len = request.form['word-count']
         db.session.add(post)
         flash(u'文章修改成功！')
@@ -135,10 +135,9 @@ def article(id, name):
     else:
         limit_posts = Article.query.filter_by(permission='common').order_by(Article.edit_timestamp.desc()).all()[0:5]
 
-    form = CommentForm()
-    if form.validate_on_submit():
+    if request.method == 'POST':
         if current_user.is_authenticated:
-            comment = Comment(body=form.body.data,article_id=post.id, user_id=current_user._get_current_object().id)
+            comment = Comment(body=request.form['comment'], article_id=post.id, user_id=current_user._get_current_object().id)
             db.session.add(comment)
             flash(u'评论提交成功！')
             return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
@@ -153,7 +152,7 @@ def article(id, name):
     )
     comments = pagination.items
 
-    return render_template('article.html', post=post, form=form,
+    return render_template('article.html', post=post,
                            comments=comments, pagination=pagination, limit_posts=limit_posts)
 
 @main.route('/article-type/<string:type>')
