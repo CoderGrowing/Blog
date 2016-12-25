@@ -55,15 +55,19 @@
                 {{ comment.body }}
                 <div class="reply-comment">
 				          <a data-toggle="collapse" data-parent="#accordion" class="label label-primary"
-				            href="#{{ comment.id }}">回复</a>
-                  <div id="{{ comment.id }}" class="collapse">
+				            href="#a{{ comment.id }}">回复</a>
+                  <div id="a{{ comment.id }}" class="collapse">
                     <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
-                  <div>
-            <textarea rows="9" cols="50"  class="form-control textarea" required="required"></textarea>
-          </div>
-          <br>
-          <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
-        </form>
+                      <div>
+                      <textarea rows="9" cols="50" class="form-control textarea" required="required"
+                                name="reply-comment"></textarea>
+                      </div>
+                      <br>
+                      <input type="submit" name="{{ comment.id }}" class="btn btn-lg-4 btn-primary" value="提交" onmouseover="comment_name(this.name)">
+{#                      <input type="hidden" id="article-id" name="article-id" value="{{ post.id }}">#}
+                      <input type="hidden" id="{{ comment.id }}" name="comment-id">
+                      <input type="hidden" value="yes" name="reply">
+                     </form>
                   </div>
 		            </div>
               </div>
@@ -75,14 +79,20 @@
           <p class="label label-default">写下你的评论</p>
         <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
           <div>
-            <textarea rows="9" cols="50"  class="form-control textarea" required="required"></textarea>
+            <textarea rows="9" cols="50"  class="form-control textarea" required="required" name="comment"></textarea>
           </div>
           <br>
           <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
+          <input type="hidden" value="no" name="reply">
         </form>
       </div>
 {% endblock %}
 
 {% block scripts %}
   {{ super() }}
+  <script>
+    function comment_name(obj) {
+      document.getElementById(obj).value = obj;
+    }
+  </script>
 {% endblock %}

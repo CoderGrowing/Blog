@@ -137,10 +137,23 @@ def article(id, name):
 
     if request.method == 'POST':
         if current_user.is_authenticated:
-            comment = Comment(body=request.form['comment'], article_id=post.id, user_id=current_user._get_current_object().id)
-            db.session.add(comment)
-            flash(u'评论提交成功！')
-            return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
+            if request.form['reply'] == "yes":
+                reply_comment = Comment(body=request.form['reply-comment'], reply=True,
+                                        article_id=post.id,
+                                        user_id=current_user._get_current_object().id)
+                comment = Comment.query.get(request.form['comment-id'])
+
+                comment.has_reply = True
+                db.session.add(reply_comment)
+                db.session.add(comment)
+                flash(u'回复成功！')
+                return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
+
+            else:
+                comment = Comment(body=request.form['comment'], article_id=post.id, user_id=current_user._get_current_object().id)
+                db.session.add(comment)
+                flash(u'评论提交成功！')
+                return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
         flash(u'请先登录后再进行评论！')
         return redirect(url_for('main.user_login'))
 
@@ -200,3 +213,13 @@ def change_password():
             flash(u'密码错误，请确认您输入的密码是否正确')
 
     return render_template('change-password.html', form=form)
+
+def reply_comment():
+    if request.method == "POST":
+        reply_comment = Comment(body=request.form['reply-comment'], reply=True,
+                                article_id=request.form['article-id'], user_id=current_user._get_current_object().id)
+        comment = Comment.query.get(request.form['comment-id'])
+        comment.has_reply = True
+
+        db.session.add(reply_comment)
+        db.session.add(comment)
