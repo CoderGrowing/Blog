@@ -14,78 +14,121 @@
     <p class="lead blog-description">随笔随心</p>
     <hr>
   </div>
-    <div class="col-sm-9 blog-main">
-    <div class="blog-post">
-    <div>
-      <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
-      <p class="blog-post-meta">时间:{{ post.timestamp[0:16]}}</p>
-      {% if post.body_html %}
-        {{ post.body_html | safe }}
+  <div class="col-sm-9 blog-main">
+  <div class="blog-post">
+  <div>
+    <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="blog-post-title title-link-style">{{ post.heading }}</a>
+    <p class="blog-post-meta">时间:{{ post.timestamp[0:16]}}</p>
+    {% if post.body_html %}
+      {{ post.body_html | safe }}
+    {% else %}
+      {{ post.body }}
+    {% endif %}
+  </div>
+  </div><hr>
+  {% if post.comments.count() == 0 %}
+        <div class="alert alert-info">还没有评论哦，还不快来抢沙发~</div>
       {% else %}
-        {{ post.body }}
+        <div class="label label-primary">已有{{ post.comments.count() }}条评论</div>
       {% endif %}
+  </div>
+  <div class="col-sm-3">
+    <div class="list-group">
+      <p class="list-group-item active">
+        最近文章
+      </p>
+       {% for po in limit_posts %}
+         <a href="{{ url_for('.article', id=po.id, name=po.heading) }}" class="list-group-item title-link-style">{{ po.heading }}</a>
+       {% endfor %}
     </div>
-    </div><hr>
-    {% if post.comments.count() == 0 %}
-          <div class="alert alert-info">还没有评论哦，还不快来抢沙发~</div>
-        {% else %}
-          <div class="label label-primary">已有{{ post.comments.count() }}条评论</div>
-        {% endif %}
-    </div>
-    <div class="col-sm-3">
-      <div class="list-group">
-        <p class="list-group-item active">
-          最近文章
-        </p>
-         {% for po in limit_posts %}
-           <a href="{{ url_for('.article', id=po.id, name=po.heading) }}" class="list-group-item title-link-style">{{ po.heading }}</a>
-         {% endfor %}
-      </div>
-    </div>
+  </div>
 
-      <div class="comment-border col-sm-9">
-        <ul class="comments"  id="comment">
-          {% for comment in comments %}
-          <li class="comment">
-            <div class="comment-content well">
-              <img class="img-rounded profile-thumbnail" src="{{ comment.user.gravatar(size=40) }}">
-              <span class="username"> {{ comment.user.username }} </span>
-              <span class="time">{{ comment.timestamp[0:16] }}</span>
-              <div class="comment-body row">
-                {{ comment.body }}
-                <div class="reply-comment">
-				          <a data-toggle="collapse" data-parent="#accordion" class="label label-primary"
-				            href="#a{{ comment.id }}">回复</a>
-                  <div id="a{{ comment.id }}" class="collapse">
-                    <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
-                      <div>
-                      <textarea rows="9" cols="50" class="form-control textarea" required="required"
-                                name="reply-comment"></textarea>
-                      </div>
-                      <br>
-                      <input type="submit" name="{{ comment.id }}" class="btn btn-lg-4 btn-primary" value="提交" onmouseover="comment_name(this.name)">
-{#                      <input type="hidden" id="article-id" name="article-id" value="{{ post.id }}">#}
-                      <input type="hidden" id="{{ comment.id }}" name="comment-id">
-                      <input type="hidden" value="yes" name="reply">
-                     </form>
+  <div class="comment-border col-sm-9">
+    <ul class="comments"  id="comment">
+      {% for comment in comments %}
+        <li class="comment">
+        <div class="comment-content well">
+          <img class="img-rounded profile-thumbnail" src="{{ comment.user.gravatar(size=40) }}">
+          <span class="username"> {{ comment.user.username }} </span>
+          <span class="time">{{ comment.timestamp[0:16] }}</span>
+          <div class="comment-body row">
+            {{ comment.body }}
+            <div class="reply-comment">
+              <a data-toggle="collapse" data-parent="#accordion" class="label label-primary"
+                href="#a{{ comment.id }}">回复</a>
+              <div id="a{{ comment.id }}" class="collapse">
+                <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
+                  <div>
+                  <textarea rows="9" cols="50" class="form-control textarea" required="required"
+                            name="reply-comment"></textarea>
                   </div>
-		            </div>
+                  <br>
+                  <input type="submit" name="{{ comment.id }} " class="btn btn-lg-4 btn-primary" value="提交" onmouseover="comment_name(this.name)">
+{#                      <input type="hidden" id="article-id" name="article-id" value="{{ post.id }}">#}
+                  <input type="hidden" id="{{ comment.id }}" name="comment-id">
+                  <input type="hidden" value="yes" name="reply">
+                 </form>
               </div>
             </div>
-          </li>
-          {% endfor %}
-        </ul>
-          <p class="lead">来都来了，留下点什么再走呗~</p>
-          <p class="label label-default">写下你的评论</p>
-        <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
-          <div>
-            <textarea rows="9" cols="50"  class="form-control textarea" required="required" name="comment"></textarea>
           </div>
-          <br>
-          <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
-          <input type="hidden" value="no" name="reply">
-        </form>
+
+          {#初始评论回复显示#}
+          {% if comment.has_reply %}
+            {% for reply_comment in reply_comments %}
+              {% if reply_comment.reply_id == comment.id%}
+                <img class="img-rounded profile-thumbnail" src="{{ reply_comment.user.gravatar(size=40) }}">
+                <span class="username"> {{ reply_comment.user.username }} </span>
+                <span class="time">{{ reply_comment.timestamp[0:16] }}</span><span>回复</span>
+                {% if reply_comment.reply_reply_id %}
+                  <img class="img-rounded profile-thumbnail" src="{{ ReplyComment.query.get(reply_comment.reply_reply_id).user.gravatar(size=40) }}">
+                  <span class="username"> {{ ReplyComment.query.get(reply_comment.reply_reply_id).user.username }} </span>
+                  <span class="time">{{ ReplyComment.query.get(reply_comment.reply_reply_id).timestamp[0:16] }}</span>
+
+                {% else %}
+                  <img class="img-rounded profile-thumbnail" src="{{ comment.user.gravatar(size=40) }}">
+                  <span class="username"> {{ comment.user.username }} </span>
+                  <span class="time">{{ comment.timestamp[0:16] }}</span>
+                {% endif %}
+
+                {# 回复回复评论显示#}
+                <div class="comment-body row">
+                  {{ reply_comment.body }}
+                  <div class="reply-comment">
+                    <a data-toggle="collapse" data-parent="#accordion" class="label label-primary"
+                      href="#a{{ reply_comment.id }}b">回复</a>
+                    <div id="a{{ reply_comment.id }}b" class="collapse">
+                      <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
+                        <div>
+                        <textarea rows="9" cols="50" class="form-control textarea" required="required"
+                                  name="reply-comment"></textarea>
+                        </div>
+                        <br>
+                        <input type="submit" name="reply{{ reply_comment.id }}" class="btn btn-lg-4 btn-primary" value="提交" onmouseover="comment_name(this.name)">
+                        <input type="hidden" id="reply{{ reply_comment.id }}" name="reply-comment-id">
+                        <input type="hidden" value="reply-reply" name="reply">
+                        <input type="hidden" value="{{ comment.id }}" name="comment">
+                       </form>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+      <p class="lead">来都来了，留下点什么再走呗~</p>
+      <p class="label label-default">写下你的评论</p>
+    <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
+      <div>
+        <textarea rows="9" cols="50"  class="form-control textarea" required="required" name="comment"></textarea>
       </div>
+      <br>
+      <input type="submit" class="btn btn-lg-4 btn-primary" value="提交">
+      <input type="hidden" value="no" name="reply">
+    </form>
+  </div>
 {% endblock %}
 
 {% block scripts %}

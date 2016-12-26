@@ -3,7 +3,7 @@
 from flask import render_template, redirect, url_for, flash, current_app, request
 from app.main import main
 from .forms import UserLoginForm, RegisterForm, CommentForm, EditProfileForm, ChangePasswordForm
-from app.models import db, Article, User, Comment
+from app.models import db, Article, User, Comment, ReplyComment
 from flask_login import login_user, login_required, logout_user, current_user
 from datetime import datetime
 import hashlib
@@ -138,14 +138,24 @@ def article(id, name):
     if request.method == 'POST':
         if current_user.is_authenticated:
             if request.form['reply'] == "yes":
-                reply_comment = Comment(body=request.form['reply-comment'], reply=True,
-                                        article_id=post.id,
-                                        user_id=current_user._get_current_object().id)
+                reply_comment = ReplyComment(body=request.form['reply-comment'], article_id=post.id,
+                                        user_id=current_user._get_current_object().id,
+                                        reply_id = request.form['comment-id'])
                 comment = Comment.query.get(request.form['comment-id'])
 
                 comment.has_reply = True
                 db.session.add(reply_comment)
                 db.session.add(comment)
+                flash(u'回复成功！')
+                return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
+            elif request.form['reply'] == "reply-reply":
+                reply_comment = ReplyComment(body=request.form['reply-comment'], article_id=post.id,
+                                        user_id=current_user._get_current_object().id,
+                                        reply_reply_id=request.form['reply-comment-id'][5:],
+                                        reply_id=request.form['comment'])
+                # reply_comment.reply_reply_id = r
+
+                db.session.add(reply_comment)
                 flash(u'回复成功！')
                 return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
 
@@ -160,13 +170,15 @@ def article(id, name):
     page = request.args.get('page', 1, type=int)
     if page == -1:
         page = (post.comments.count() - 1) / 20 + 1
-    pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
+    pagination = post.comments.order_by(Comment.timestamp.desc()).paginate(
         page, per_page=10, error_out=False
     )
     comments = pagination.items
+    reply_comments = ReplyComment.query.order_by(ReplyComment.timestamp.asc()).all()
 
     return render_template('article.html', post=post,
-                           comments=comments, pagination=pagination, limit_posts=limit_posts)
+                           comments=comments, reply_comments = reply_comments,
+                           pagination=pagination, limit_posts=limit_posts, ReplyComment=ReplyComment)
 
 @main.route('/article-type/<string:type>')
 def article_type(type):
