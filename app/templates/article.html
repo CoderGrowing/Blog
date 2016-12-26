@@ -26,12 +26,14 @@
     {% endif %}
   </div>
   </div><hr>
+
   {% if post.comments.count() == 0 %}
-        <div class="alert alert-info">还没有评论哦，还不快来抢沙发~</div>
-      {% else %}
+    <div class="alert alert-info">还没有评论哦，还不快来抢沙发~</div>
+  {% else %}
         <div class="label label-primary">已有{{ post.comments.count() }}条评论</div>
-      {% endif %}
+  {% endif %}
   </div>
+
   <div class="col-sm-3">
     <div class="list-group">
       <p class="list-group-item active">
@@ -63,9 +65,8 @@
                             name="reply-comment"></textarea>
                   </div>
                   <br>
-                  <input type="submit" name="{{ comment.id }} " class="btn btn-lg-4 btn-primary" value="提交" onmouseover="comment_name(this.name)">
-{#                      <input type="hidden" id="article-id" name="article-id" value="{{ post.id }}">#}
-                  <input type="hidden" id="{{ comment.id }}" name="comment-id">
+                  <input type="submit" name="{{ comment.id }} " class="btn btn-lg-4 btn-primary" value="提交">
+                  <input type="hidden" value="{{ comment.id }}" name="comment-id">
                   <input type="hidden" value="yes" name="reply">
                  </form>
               </div>
@@ -103,7 +104,7 @@
                                   name="reply-comment"></textarea>
                         </div>
                         <br>
-                        <input type="submit" name="reply{{ reply_comment.id }}" class="btn btn-lg-4 btn-primary" value="提交" onmouseover="comment_name(this.name)">
+                        <input type="submit" name="reply{{ reply_comment.id }}" class="btn btn-lg-4 btn-primary" value="提交">
                         <input type="hidden" id="reply{{ reply_comment.id }}" name="reply-comment-id">
                         <input type="hidden" value="reply-reply" name="reply">
                         <input type="hidden" value="{{ comment.id }}" name="comment">
@@ -129,13 +130,4 @@
       <input type="hidden" value="no" name="reply">
     </form>
   </div>
-{% endblock %}
-
-{% block scripts %}
-  {{ super() }}
-  <script>
-    function comment_name(obj) {
-      document.getElementById(obj).value = obj;
-    }
-  </script>
 {% endblock %}
