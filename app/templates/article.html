@@ -5,7 +5,6 @@
   {{ super() }}
   <link rel="stylesheet" href="{{ url_for("static", filename="blog.css")}}">
 {% endblock %}
-
 {% block title %} 文章 {% endblock %}
 
 {% block page_content %}
@@ -30,7 +29,11 @@
   {% if post.comments.count() == 0 %}
     <div class="alert alert-info">还没有评论哦，还不快来抢沙发~</div>
   {% else %}
+<<<<<<< HEAD
         <div class="label label-primary">已有{{ post.comments.count() }}条评论</div>
+=======
+    <div class="label label-primary">已有{{ post.comments.count() }}条评论</div>
+>>>>>>> c
   {% endif %}
   </div>
 

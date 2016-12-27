@@ -3,7 +3,11 @@
 from flask import render_template, redirect, url_for, flash, current_app, request
 from app.main import main
 from .forms import UserLoginForm, RegisterForm, CommentForm, EditProfileForm, ChangePasswordForm
+<<<<<<< HEAD
 from app.models import db, Article, User, Comment, Tag
+=======
+from app.models import db, Article, User, Comment, ReplyComment, Tag
+>>>>>>> c
 from flask_login import login_user, login_required, logout_user, current_user
 from datetime import datetime
 import hashlib
@@ -63,9 +67,12 @@ def write_article():
                 db.session.add(article)
             else:
                 article.tags.append(tag)
+<<<<<<< HEAD
                 db.session.add(article)
 
 
+=======
+>>>>>>> c
 
         flash(u'文章提交成功！')
         return redirect(url_for('main.index'))
@@ -159,10 +166,39 @@ def article(id, name):
     form = CommentForm()
     if form.validate_on_submit():
         if current_user.is_authenticated:
+<<<<<<< HEAD
             comment = Comment(body=form.body.data,article_id=post.id, user_id=current_user._get_current_object().id)
             db.session.add(comment)
             flash(u'评论提交成功！')
             return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
+=======
+            if request.form['reply'] == "yes":
+                reply_comment = ReplyComment(body=request.form['reply-comment'], article_id=post.id,
+                                        user_id=current_user._get_current_object().id,
+                                        reply_id = request.form['comment-id'])
+                comment = Comment.query.get(request.form['comment-id'])
+
+                comment.has_reply = True
+                db.session.add(reply_comment)
+                db.session.add(comment)
+                flash(u'回复成功！')
+                return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
+            elif request.form['reply'] == "reply-reply":
+                reply_comment = ReplyComment(body=request.form['reply-comment'], article_id=post.id,
+                                        user_id=current_user._get_current_object().id,
+                                        reply_reply_id=request.form['reply-comment-id'][5:],
+                                        reply_id=request.form['comment'])
+
+                db.session.add(reply_comment)
+                flash(u'回复成功！')
+                return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
+
+            else:
+                comment = Comment(body=request.form['comment'], article_id=post.id, user_id=current_user._get_current_object().id)
+                db.session.add(comment)
+                flash(u'评论提交成功！')
+                return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
+>>>>>>> c
         flash(u'请先登录后再进行评论！')
         return redirect(url_for('main.user_login'))
 
