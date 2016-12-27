@@ -8,6 +8,20 @@ import hashlib
 from flask import request
 
 
+articletags = db.Table('articletags',
+                        db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
+                        db.Column('article_id', db.Integer, db.ForeignKey('articles.id')))
+
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    articles = db.relationship('Article',
+                               secondary=articletags,
+                               backref=db.backref('tags', lazy='dynamic'), lazy='dynamic')
+
+
 class Article(db.Model):
     __tablename__ = 'articles'
     id = db.Column(db.Integer, primary_key=True)
@@ -16,11 +30,9 @@ class Article(db.Model):
     article_type = db.Column(db.Text)
     article_len = db.Column(db.Integer)
     permission = db.Column(db.String(64))
-    
-    timestamp = db.Column(db.String(64), index=True, default=datetime.now)
-    edit_timestamp = db.Column(db.String(64), index=True, default=datetime.now)
+    timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
+    edit_timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     comments = db.relationship('Comment', backref='article', lazy='dynamic')
-    reply_comments = db.relationship('ReplyComment', backref='article', lazy='dynamic')
 
     body_html = db.Column(db.Text)
 
@@ -51,11 +63,10 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True)
-    timestamp = db.Column(db.String(64), index=True, default=datetime.now)
+    timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     password_hash = db.Column(db.String(128))
     avatar_hash = db.Column(db.String(32))
     comments = db.relationship('Comment', backref='user', lazy='dynamic')
-    reply_comments = db.relationship('ReplyComment', backref='user', lazy='dynamic')
     role = db.Column(db.String, default='User')
 
 
@@ -88,26 +99,11 @@ class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
-    timestamp = db.Column(db.String(64), index=True, default=datetime.now)
+    timestamp = db.Column(db.String(64), index=True, default=datetime.now().strftime("%Y-%m-%d %H:%M"))
     disabled = db.Column(db.Boolean)
-    has_reply = db.Column(db.Boolean, default=False)
-    # reply_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     article_id = db.Column(db.Integer, db.ForeignKey('articles.id'))
-    reply_comment = db.relationship('ReplyComment', backref='comment', lazy='dynamic')
 
-
-class ReplyComment(db.Model):
-    __tablename__ = 'reply_comments'
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text)
-    timestamp = db.Column(db.String(64), index=True, default=datetime.now)
-    disabled = db.Column(db.Boolean)
-    reply_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
-    reply_reply_id = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    article_id = db.Column(db.Integer, db.ForeignKey('articles.id'))
-    db.relationship('ReplyComment', backref='replycomment', lazy='dynamic')
 
 
 @login_manager.user_loader
