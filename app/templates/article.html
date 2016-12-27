@@ -5,7 +5,6 @@
   {{ super() }}
   <link rel="stylesheet" href="{{ url_for("static", filename="blog.css")}}">
 {% endblock %}
-
 {% block title %} 文章 {% endblock %}
 
 {% block page_content %}
@@ -27,10 +26,10 @@
   </div>
   </div><hr>
   {% if post.comments.count() == 0 %}
-        <div class="alert alert-info">还没有评论哦，还不快来抢沙发~</div>
-      {% else %}
-        <div class="label label-primary">已有{{ post.comments.count() }}条评论</div>
-      {% endif %}
+    <div class="alert alert-info">还没有评论哦，还不快来抢沙发~</div>
+  {% else %}
+    <div class="label label-primary">已有{{ post.comments.count() }}条评论</div>
+  {% endif %}
   </div>
   <div class="col-sm-3">
     <div class="list-group">
@@ -63,9 +62,8 @@
                             name="reply-comment"></textarea>
                   </div>
                   <br>
-                  <input type="submit" name="{{ comment.id }} " class="btn btn-lg-4 btn-primary" value="提交" onmouseover="comment_name(this.name)">
-{#                      <input type="hidden" id="article-id" name="article-id" value="{{ post.id }}">#}
-                  <input type="hidden" id="{{ comment.id }}" name="comment-id">
+                  <input type="submit" name="{{ comment.id }} " class="btn btn-lg-4 btn-primary" value="提交">
+                  <input type="hidden" value="{{ comment.id }}" name="comment-id">
                   <input type="hidden" value="yes" name="reply">
                  </form>
               </div>

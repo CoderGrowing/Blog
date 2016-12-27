@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for("static", filename="flat-ui.min.css") }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin-nav.css') }}">
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for("static", filename="flat-ui.min.css") }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin-nav.css') }}">
 {% endblock %}
 
 {% block page_content %}
-    <div class="container-fluid">
-    {% include "_admin-nav.html" %}
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <h4>欢迎来到后台管理，请在左侧导航栏选择相应功能</h4>
-    </div>
-    </div>
+  <div class="container-fluid">
+  {% include "_admin-nav.html" %}
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h4>欢迎来到后台管理，请在左侧导航栏选择相应功能</h4>
+  </div>
+  </div>
 
 {% endblock %}
 
