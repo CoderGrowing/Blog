@@ -8,6 +8,20 @@ import hashlib
 from flask import request
 
 
+articletags = db.Table('articletags',
+                        db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
+                        db.Column('article_id', db.Integer, db.ForeignKey('articles.id')))
+
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    articles = db.relationship('Article',
+                               secondary=articletags,
+                               backref=db.backref('tags', lazy='dynamic'), lazy='dynamic')
+
+
 class Article(db.Model):
     __tablename__ = 'articles'
     id = db.Column(db.Integer, primary_key=True)

@@ -3,7 +3,7 @@
 from flask import render_template, redirect, url_for, flash, current_app, request
 from app.main import main
 from .forms import UserLoginForm, RegisterForm, CommentForm, EditProfileForm, ChangePasswordForm
-from app.models import db, Article, User, Comment, ReplyComment
+from app.models import db, Article, User, Comment, ReplyComment, Tag
 from flask_login import login_user, login_required, logout_user, current_user
 from datetime import datetime
 import hashlib
@@ -46,6 +46,24 @@ def write_article():
                           article_len=request.form['word-count']
                           )
         db.session.add(article)
+
+        tags = request.form['tag-name']
+        article_tags = []
+
+        for i in tags.split(','):
+            article_tags.append(i)
+
+        article_tags = article_tags[:-1]
+        for article_tag in article_tags:
+            tag = Tag.query.filter_by(name=article_tag).first()
+            if not tag:
+                tag = Tag(name=article_tag)
+                db.session.add(tag)
+                article.tags.append(tag)
+                db.session.add(article)
+            else:
+                article.tags.append(tag)
+
         flash(u'文章提交成功！')
         return redirect(url_for('main.index'))
 
@@ -153,7 +171,6 @@ def article(id, name):
                                         user_id=current_user._get_current_object().id,
                                         reply_reply_id=request.form['reply-comment-id'][5:],
                                         reply_id=request.form['comment'])
-                # reply_comment.reply_reply_id = r
 
                 db.session.add(reply_comment)
                 flash(u'回复成功！')
