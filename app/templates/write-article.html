@@ -44,16 +44,10 @@
             </label>
           </div>
           <br>
-<<<<<<< HEAD
-            <div class="tagsinput-primary">
-              <input name="tag" class="tagsinput" data-role="tagsinput" placeholder="为文章加上标签吧">
-            </div>
-=======
           <div class="tagsinput-primary">
             <input name="tag" class="tagsinput" data-role="tagsinput" placeholder="为文章加上标签吧">
           </div>
 
->>>>>>> c
           <input type="submit" class="btn btn-lg-4 btn-primary" value="提交"
              onclick="wordCount()">
           <input type="hidden" id="word-count" name="word-count">
@@ -69,27 +63,15 @@
         delay: 100
     }});
   function wordCount() {
-<<<<<<< HEAD
-    document.getElementById('word-count').value = document.getElementsByClassName("words")[0].innerHTML
-=======
     document.getElementById('word-count').value = document.getElementsByClassName("words")[0].innerHTML;
->>>>>>> c
 
     var tag = document.getElementsByClassName('label-info');
     for(var i = 0; i <= tag.length; i++){
       document.getElementById('tag-name').value += (tag[i].innerText + ',')
     }
-<<<<<<< HEAD
-  }
-  </script>
-  <script src="{{ url_for("static", filename="jquery.min.js") }}"></script>
-  <script src="{{ url_for("static", filename="flat-ui.min.js") }}"></script>
-  <script>
-=======
 
   }
   </script>
->>>>>>> c
 
   <script src="{{ url_for("static", filename="jquery.min.js") }}"></script>
   <script src="{{ url_for("static", filename="flat-ui.min.js") }}"></script>
