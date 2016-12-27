@@ -3,7 +3,7 @@
 from flask import render_template, redirect, url_for, flash, current_app, request
 from app.main import main
 from .forms import UserLoginForm, RegisterForm, CommentForm, EditProfileForm, ChangePasswordForm
-from app.models import db, Article, User, Comment, ReplyComment
+from app.models import db, Article, User, Comment, Tag
 from flask_login import login_user, login_required, logout_user, current_user
 from datetime import datetime
 import hashlib
@@ -46,6 +46,27 @@ def write_article():
                           article_len=request.form['word-count']
                           )
         db.session.add(article)
+
+        tags = request.form['tag-name']
+        article_tags = []
+
+        for i in tags.split(','):
+            article_tags.append(i)
+
+        article_tags = article_tags[:-1]
+        for article_tag in article_tags:
+            tag = Tag.query.filter_by(name=article_tag).first()
+            if not tag:
+                tag = Tag(name=article_tag)
+                db.session.add(tag)
+                article.tags.append(tag)
+                db.session.add(article)
+            else:
+                article.tags.append(tag)
+                db.session.add(article)
+
+
+
         flash(u'文章提交成功！')
         return redirect(url_for('main.index'))
 
@@ -62,7 +83,7 @@ def edit_article(id):
     if request.method == 'POST':
         post.heading = request.form['heading']
         post.body = request.form['article']
-        post.edit_timestamp = datetime.now
+        post.edit_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
         post.article_len = request.form['word-count']
         db.session.add(post)
         flash(u'文章修改成功！')
@@ -135,50 +156,26 @@ def article(id, name):
     else:
         limit_posts = Article.query.filter_by(permission='common').order_by(Article.edit_timestamp.desc()).all()[0:5]
 
-    if request.method == 'POST':
+    form = CommentForm()
+    if form.validate_on_submit():
         if current_user.is_authenticated:
-            if request.form['reply'] == "yes":
-                reply_comment = ReplyComment(body=request.form['reply-comment'], article_id=post.id,
-                                        user_id=current_user._get_current_object().id,
-                                        reply_id = request.form['comment-id'])
-                comment = Comment.query.get(request.form['comment-id'])
-
-                comment.has_reply = True
-                db.session.add(reply_comment)
-                db.session.add(comment)
-                flash(u'回复成功！')
-                return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
-            elif request.form['reply'] == "reply-reply":
-                reply_comment = ReplyComment(body=request.form['reply-comment'], article_id=post.id,
-                                        user_id=current_user._get_current_object().id,
-                                        reply_reply_id=request.form['reply-comment-id'][5:],
-                                        reply_id=request.form['comment'])
-                # reply_comment.reply_reply_id = r
-
-                db.session.add(reply_comment)
-                flash(u'回复成功！')
-                return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
-
-            else:
-                comment = Comment(body=request.form['comment'], article_id=post.id, user_id=current_user._get_current_object().id)
-                db.session.add(comment)
-                flash(u'评论提交成功！')
-                return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
+            comment = Comment(body=form.body.data,article_id=post.id, user_id=current_user._get_current_object().id)
+            db.session.add(comment)
+            flash(u'评论提交成功！')
+            return redirect(url_for('main.article', id=post.id, name=post.heading, page=-1))
         flash(u'请先登录后再进行评论！')
         return redirect(url_for('main.user_login'))
 
     page = request.args.get('page', 1, type=int)
     if page == -1:
         page = (post.comments.count() - 1) / 20 + 1
-    pagination = post.comments.order_by(Comment.timestamp.desc()).paginate(
+    pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
         page, per_page=10, error_out=False
     )
     comments = pagination.items
-    reply_comments = ReplyComment.query.order_by(ReplyComment.timestamp.asc()).all()
 
-    return render_template('article.html', post=post,
-                           comments=comments, reply_comments = reply_comments,
-                           pagination=pagination, limit_posts=limit_posts, ReplyComment=ReplyComment)
+    return render_template('article.html', post=post, form=form,
+                           comments=comments, pagination=pagination, limit_posts=limit_posts)
 
 @main.route('/article-type/<string:type>')
 def article_type(type):
@@ -225,13 +222,3 @@ def change_password():
             flash(u'密码错误，请确认您输入的密码是否正确')
 
     return render_template('change-password.html', form=form)
-
-def reply_comment():
-    if request.method == "POST":
-        reply_comment = Comment(body=request.form['reply-comment'], reply=True,
-                                article_id=request.form['article-id'], user_id=current_user._get_current_object().id)
-        comment = Comment.query.get(request.form['comment-id'])
-        comment.has_reply = True
-
-        db.session.add(reply_comment)
-        db.session.add(comment)
