@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 
 {% block head %}
   {{ super() }}
@@ -9,8 +10,8 @@
 
 {% block page_content %}
   <div class="blog-header">
-    <h1 class="blog-title">CoderGrowing</h1>
-    <p class="lead blog-description">随笔随心</p>
+    <span><span class="font1" style="color: #FEE339; font-size: 40px;" >C</span><span class="font2" style="color:#3DF6EB; font-size: 32px" >o</span><span class="font3" style=" color:#D32F58; font-size: 32px" >d</span><span class="font4" style="font-size: 32px; color:#CC00A6" >e</span><span class="font5" style="font-size: 32px;  color:#D90598" >r</span><span class="font6" style="font-size: 40px;  color:#66ED53" >G</span><span class="font7" style="font-size: 32px;  color:#93F590" >r</span><span class="font8" style="font-size: 32px;  color:#8836B7" >o</span><span class="font9" style="font-size: 32px;  color:#8A5BD4" >w</span><span class="font10" style="font-size: 32px;  color:#656B94" >i</span><span class="font11" style="font-size: 32px;  color:#BC9448" >n</span><span class="" style="font-size: 32px;  color:#3A004B" >g</span></span>
+    <p class="lead blog-description">总有时候，想写点什么</p>
     <hr>
   </div>
   <div class="col-sm-9 blog-main">
@@ -25,11 +26,6 @@
     {% endif %}
   </div>
   </div><hr>
-  {% if post.comments.count() == 0 %}
-    <div class="alert alert-info">还没有评论哦，还不快来抢沙发~</div>
-  {% else %}
-    <div class="label label-primary">已有{{ post.comments.count() }}条评论</div>
-  {% endif %}
   </div>
   <div class="col-sm-3 tagcloud-father">
     <div class="list-group">
@@ -45,6 +41,14 @@
     </div>
   </div>
 
+  <div class="col-sm-9">
+  {% if post.comments.count() == 0 %}
+    <div class="alert alert-info">还没有评论哦，还不快来抢沙发~</div>
+  {% else %}
+    <div class="label label-primary">已有{{ post.comments.count() + post.reply_comments.count() }}条评论</div>
+  {% endif %}
+  </div>
+
   <div class="comment-border col-sm-9">
     <ul class="comments"  id="comment">
       {% for comment in comments %}
@@ -57,7 +61,7 @@
             {{ comment.body }}
             <div class="reply-comment">
               <a data-toggle="collapse" data-parent="#accordion" class="label label-primary"
-                href="#a{{ comment.id }}">回复</a>
+                href="#a{{ comment.id }}">回复</a><hr>
               <div id="a{{ comment.id }}" class="collapse">
                 <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
                   <div>
@@ -79,7 +83,7 @@
               {% if reply_comment.reply_id == comment.id%}
                 <img class="img-rounded profile-thumbnail" src="{{ reply_comment.user.gravatar(size=40) }}">
                 <span class="username"> {{ reply_comment.user.username }} </span>
-                <span class="time">{{ reply_comment.timestamp[0:16] }}</span><span>回复</span>
+                <span class="time">{{ reply_comment.timestamp[0:16] }}</span><span class="reply">回复</span>
                 {% if reply_comment.reply_reply_id %}
                   <img class="img-rounded profile-thumbnail" src="{{ ReplyComment.query.get(reply_comment.reply_reply_id).user.gravatar(size=40) }}">
                   <span class="username"> {{ ReplyComment.query.get(reply_comment.reply_reply_id).user.username }} </span>
@@ -96,7 +100,7 @@
                   {{ reply_comment.body }}
                   <div class="reply-comment">
                     <a data-toggle="collapse" data-parent="#accordion" class="label label-primary"
-                      href="#a{{ reply_comment.id }}b">回复</a>
+                      href="#a{{ reply_comment.id }}b">回复</a><hr>
                     <div id="a{{ reply_comment.id }}b" class="collapse">
                       <form method="POST" action="{{ url_for('main.article', id=post.id, name=post.heading) }}">
                         <div>
@@ -118,6 +122,13 @@
         </div>
       </li>
       {% endfor %}
+
+      {% if pagination %}
+        <div class="pagination">
+          {{ macros.pagination_widget(pagination, '.article', id=id, name=name) }}
+        </div>
+      {% endif %}
+
     </ul>
       <p class="lead">来都来了，留下点什么再走呗~</p>
       <p class="label label-default">写下你的评论</p>
@@ -130,6 +141,7 @@
       <input type="hidden" value="no" name="reply">
     </form>
   </div>
+
 {% endblock %}
 
 {% block scripts %}

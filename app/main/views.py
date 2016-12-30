@@ -140,7 +140,7 @@ def logout():
 
 @main.route('/tag/<int:id>/<string:name>')
 def tag(id, name):
-    page = request.args.get('page', 1, type=int)
+    page = request.args.get('tag/page', 1, type=int)
     tag = Tag.query.get(id)
     tags = Tag.query.all()
 
@@ -218,7 +218,7 @@ def article(id, name):
     comments = pagination.items
     reply_comments = ReplyComment.query.order_by(ReplyComment.timestamp.asc()).all()
 
-    return render_template('article.html', post=post, tags=tags,
+    return render_template('article.html', post=post, tags=tags, id=id, name=name,
                            comments=comments, reply_comments = reply_comments,
                            pagination=pagination, limit_posts=limit_posts, ReplyComment=ReplyComment)
 

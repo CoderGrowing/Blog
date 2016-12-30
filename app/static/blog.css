@@ -106,8 +106,9 @@ h6, .h6 {
 }
 .blog-description {
   display: inline;
-  font-size: 20px;
+  font-size: 16px;
   color: #999;
+  padding-left: 20px;
 }
 
 
@@ -214,6 +215,15 @@ h6, .h6 {
   padding-bottom: 20px;
 }
 
+.reply{
+  font-size: 6px;
+  font-weight: bold;
+  padding: 2px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 1px solid;
+}
+
 .comments{
   padding-left: 0;
 }
@@ -238,13 +248,8 @@ h6, .h6 {
   border-radius: 3px;
 }
 
-.tagcloud-father{
-  position: relative;
-}
-
 .tagcloud{
   border: 1px solid #DDDDDD;
-  position: absolute;
   height: 400px;
   width: 100%;
 }
