@@ -16,7 +16,7 @@ articletags = db.Table('articletags',
 class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.Text)
     articles = db.relationship('Article',
                                secondary=articletags,
                                backref=db.backref('tags', lazy='dynamic'), lazy='dynamic')

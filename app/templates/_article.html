@@ -37,7 +37,7 @@
     </div>
   </div>{#  div blog-main#}
 
-  <div class="col-sm-3">
+  <div class="col-sm-3 tagcloud-father">
     <div class="list-group">
       <p class="list-group-item active">
         最近文章
@@ -46,5 +46,21 @@
          <a href="{{ url_for('.article', id=post.id, name=post.heading) }}" class="list-group-item title-link-style">{{ post.heading }}</a>
        {% endfor %}
     </div>
+    <p class="list-group-item active tag-header">标签</p>
+    <div id="tagcloud" class="tagcloud">
+	  </div>
+
   </div><!-- /.col-sm-3 -->
 </div>
+
+{#<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>#}
+{#<script src="{{ url_for("static", filename="jqcloud.min.js") }}"></script>#}
+{#<script>#}
+{#  var words = [#}
+{#    {% for article in articles %}#}
+{#      {text: "{{ article.name }}", weight: 5 },#}
+{#    {% endfor %}#}
+{#  ];#}
+{##}
+{#  $('#tagcloud').jQCloud(words, {autoResize: true, shape: 'rectangular'});#}
+{#</script>#}

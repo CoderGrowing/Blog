@@ -1,9 +1,9 @@
 #coding:utf-8
 
 from flask import render_template, redirect, url_for, flash, current_app, request
-from app.main import main
 from .forms import UserLoginForm, RegisterForm, CommentForm, EditProfileForm, ChangePasswordForm
 from app.models import db, Article, User, Comment, ReplyComment, Tag
+from app.main import main
 from flask_login import login_user, login_required, logout_user, current_user
 from datetime import datetime
 import hashlib
@@ -11,19 +11,18 @@ import hashlib
 
 @main.route('/', methods=['POST', 'GET'])
 def index():
+    tags = Tag.query.all()
     page = request.args.get('page', 1, type=int)
 
     if current_user.is_authenticated and current_user.role == 'Admin':
-        pagination = Article.query.order_by(Article.edit_timestamp.desc()).paginate(
-            page, per_page=10, error_out=False)
+        pagination = Article.query.order_by(Article.timestamp.desc()).paginate(page, per_page=10, error_out=False)
     else:
-        pagination = Article.query.filter_by(permission='common').\
-            order_by(Article.edit_timestamp.desc()).paginate(page, per_page=10, error_out=False)
+        pagination = Article.query.filter_by(permission='common').order_by(Article.timestamp.desc()).paginate(page, per_page=10, error_out=False)
 
     posts = pagination.items
-    limit_posts = posts[0:5]
+    limit_posts = posts[0:10]
 
-    return render_template('index.html', posts=posts, pagination=pagination, limit_posts=limit_posts, )
+    return render_template('index.html', posts=posts, pagination=pagination, limit_posts=limit_posts, tags=tags)
 
 @main.route('/admin', methods=['POST', 'GET'])
 @login_required
@@ -63,8 +62,8 @@ def write_article():
                 db.session.add(article)
             else:
                 article.tags.append(tag)
-
         flash(u'文章提交成功！')
+
         return redirect(url_for('main.index'))
 
     return render_template('write-article.html')
@@ -94,8 +93,7 @@ def article_list():
     if current_user.role != "Admin":
         flash(u'您没有权限访问该页面！')
         return redirect(url_for('main.index'))
-
-    posts = Article.query.order_by(Article.edit_timestamp.desc()).all()
+    posts = Article.query.order_by(Article.timestamp.desc())
 
     return render_template('article-list.html', posts=posts)
 
@@ -140,8 +138,34 @@ def logout():
     flash(u'注销成功！')
     return redirect(url_for('main.index'))
 
+@main.route('/tag/<int:id>/<string:name>')
+def tag(id, name):
+    page = request.args.get('page', 1, type=int)
+    tag = Tag.query.get(id)
+    tags = Tag.query.all()
+
+    if not tag and Tag.query.filter_by(name=name).first():
+        flash(u'您要找的标签不存在！')
+        return redirect(url_for('main.index'))
+
+    if current_user.is_authenticated and current_user.role == 'Admin':
+        pagination = tag.articles.order_by(Article.edit_timestamp.desc()).\
+            paginate(page, per_page=10, error_out=False)
+        limit_posts = Article.query.order_by(Article.timestamp.desc()).all()[0:10]
+
+    else:
+        pagination = tag.articles.filter_by(permission='common').order_by(Article.edit_timestamp.desc()).\
+            paginate(page, per_page=10, error_out=False)
+        limit_posts = Article.query.filter_by(permission='common').order_by(Article.timestamp.desc()).all()[0:10]
+    posts = pagination.items
+
+    return render_template('tag.html', id=id, name=name, pagination=pagination, posts=posts,
+                           limit_posts=limit_posts,tags=tags)
+
 @main.route('/article/<int:id>/<string:name>', methods=['POST', 'GET'] )
 def article(id, name):
+    tags = Tag.query.all()
+
     if Article.query.get(id) and Article.query.filter_by(heading=name).first():
         post = Article.query.get_or_404(id)
     else:
@@ -149,9 +173,10 @@ def article(id, name):
         return redirect(url_for('main.index'))
 
     if current_user.is_authenticated and current_user.role == 'Admin':
-        limit_posts = Article.query.order_by(Article.edit_timestamp.desc()).all()[0:5]
+        limit_posts =  Article.query.order_by(Article.timestamp.desc()).all()[0:10]
     else:
-        limit_posts = Article.query.filter_by(permission='common').order_by(Article.edit_timestamp.desc()).all()[0:5]
+        limit_posts = Article.query.filter_by(permission='common').\
+            order_by(Article.timestamp.desc()).all()[0:10]
 
     if request.method == 'POST':
         if current_user.is_authenticated:
@@ -193,27 +218,27 @@ def article(id, name):
     comments = pagination.items
     reply_comments = ReplyComment.query.order_by(ReplyComment.timestamp.asc()).all()
 
-    return render_template('article.html', post=post,
+    return render_template('article.html', post=post, tags=tags,
                            comments=comments, reply_comments = reply_comments,
                            pagination=pagination, limit_posts=limit_posts, ReplyComment=ReplyComment)
 
 @main.route('/article-type/<string:type>')
 def article_type(type):
-
+    tags = Tag.query.all()
     page = request.args.get('page', 1, type=int)
     if current_user.is_authenticated and current_user.role == 'Admin':
-        pagination = Article.query.filter_by(article_type=type).order_by(Article.edit_timestamp.desc()).\
+        pagination = Article.query.filter_by(article_type=type).order_by(Article.timestamp.desc()).\
             paginate(page, per_page=10, error_out=False)
-        limit_posts = Article.query.order_by(Article.edit_timestamp.desc()).all()[0:5]
+        limit_posts = Article.query.order_by(Article.timestamp.desc()).all()[0:10]
     else:
-        pagination = Article.query.filter_by(article_type=type, permission='common').\
-            order_by(Article.edit_timestamp.desc()).paginate(page, per_page=10, error_out=False)
-        limit_posts = Article.query.filter_by(permission='common').\
-        order_by(Article.edit_timestamp.desc()).all()[0:5]
+        pagination = Article.query.filter_by(permission='common', article_type=type).\
+            order_by(Article.timestamp.desc()).paginate(page, per_page=10, error_out=False)
+        limit_posts = Article.query.filter_by(permission='common').order_by(Article.timestamp.desc()).all()[0:10]
+
     posts = pagination.items
 
-
-    return render_template('article-type.html',type=type, posts=posts, pagination=pagination, limit_posts=limit_posts)
+    return render_template('article-type.html',type=type, posts=posts, pagination=pagination,
+                           limit_posts=limit_posts, tags=tags)
 
 
 @main.route('/edit-profile', methods=['POST', 'GET'])
@@ -242,13 +267,3 @@ def change_password():
             flash(u'密码错误，请确认您输入的密码是否正确')
 
     return render_template('change-password.html', form=form)
-
-def reply_comment():
-    if request.method == "POST":
-        reply_comment = Comment(body=request.form['reply-comment'], reply=True,
-                                article_id=request.form['article-id'], user_id=current_user._get_current_object().id)
-        comment = Comment.query.get(request.form['comment-id'])
-        comment.has_reply = True
-
-        db.session.add(reply_comment)
-        db.session.add(comment)

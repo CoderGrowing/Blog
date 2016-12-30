@@ -5,6 +5,7 @@
   {{ super() }}
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='zenburn.css') }}">
+  <link rel="stylesheet" href="{{ url_for("static", filename="jqcloud.min.css") }}">
 {% endblock %}
 
 {% block navbar %}
@@ -86,6 +87,18 @@
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
+  {{ super() }}
+<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="{{ url_for("static", filename="jqcloud.min.js") }}"></script>
+<script>
+  var words = [
+    {% for tag in tags %}
+      { text:"{{ tag.name }}({{ tag.articles.count() }})", weight:{{ tag.articles.count() }},
+        link: "{{ url_for("main.tag", id=tag.id, name=tag.name)}}" },
+    {% endfor %}
+  ];
+
+  $('#tagcloud').jQCloud(words, {autoResize: true, shape: 'rectangular'});
+</script>
 {% endblock %}
 

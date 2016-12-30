@@ -233,3 +233,18 @@ h6, .h6 {
   width: 300px;
   height: 180px;
 }
+
+.tag-header{
+  border-radius: 3px;
+}
+
+.tagcloud-father{
+  position: relative;
+}
+
+.tagcloud{
+  border: 1px solid #DDDDDD;
+  position: absolute;
+  height: 400px;
+  width: 100%;
+}
