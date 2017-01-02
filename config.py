@@ -1,5 +1,4 @@
 #coding:utf-8
-#配置文件
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -34,6 +33,5 @@ config = {
     'development':DevelopmentConfig,
     'testing':TestingConfig,
     'production':ProductionConfig,
-
     'default':DevelopmentConfig
 }

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}更换头像{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for("static", filename="blog.css") }}">
+{% endblock %}
+
+{% block page_content %}
+  <div class="blog-header">
+  <span><span class="font1" style="color: #FEE339; font-size: 40px;" >C</span><span class="font2" style="color:#3DF6EB; font-size: 32px" >o</span><span class="font3" style=" color:#D32F58; font-size: 32px" >d</span><span class="font4" style="font-size: 32px; color:#CC00A6" >e</span><span class="font5" style="font-size: 32px;  color:#D90598" >r</span><span class="font6" style="font-size: 40px;  color:#66ED53" >G</span><span class="font7" style="font-size: 32px;  color:#93F590" >r</span><span class="font8" style="font-size: 32px;  color:#8836B7" >o</span><span class="font9" style="font-size: 32px;  color:#8A5BD4" >w</span><span class="font10" style="font-size: 32px;  color:#656B94" >i</span><span class="font11" style="font-size: 32px;  color:#BC9448" >n</span><span class="" style="font-size: 32px;  color:#3A004B" >g</span></span>
+  <p class="lead blog-description">总有时候，想写点什么</p>
+  <hr>
+  </div>
+
+  <div class="col-sm-9 blog-main about">
+  <h1>说明</h1>
+  <p>本站的头像采用Gravatar提供的头像服务，您只需在Gravatar网站注册并修改头像后，
+    即可在任意使用Gravatar头像服务的地方显示您的头像。</p>
+  
+  <p>前往注册 <a href="http://cn.gravatar.com/">Gravatar</a></p>
+  </div>
+{% endblock %}

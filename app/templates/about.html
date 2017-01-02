@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}关于{% endblock %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for("static", filename="blog.css") }}">
+{% endblock %}
+
+{% block page_content %}
+
+<div class="blog-main about">
+<h1 style="color: #66CC99">关于</h1><br>
+<h2 style="color: #66CCCC">博客</h2>
+<p>我喜欢读书，看的多了，也总有些时候想写点什么。喜欢将头脑中的想法变成文字，手指在键盘上敲打的感觉。</p>
+<p>WordPress被我搞挂了之后，有了自己动手建一个博客的想法，遂有了这个小小的博客。</p>
+<p>博客基于Flask和Bootstrap搭建，风格全凭我自己的喜好，所以有些地方可能看起来并不是太人性化。水平有限，审美能力有限，博客的功能、样式都不是太完善。但对于只想写写字，记录下生活的我来说，应该也足够了。在以后使用过程中觉得有什么不足再慢慢改进吧。</p>
+<h2 style="color: #CC6666">我</h2>
+<p>总羡慕大神超凡的能力，却又总想要放弃努力。</p>
+<p>身处金字塔尖的雄鹰不痛苦，它已经攀上了高峰。<br>
+地上忙碌的蚂蚁不痛苦，它自有它简单的小幸福。<br>
+向上攀爬的蜗牛最痛苦，向往高峰，却可能穷极一生也无法到达，更何况走走停停。</p>
+<p>简单的动物如此，何况生而为人。</p>
+<p>想得却不可得，你奈人生何。</p>
+<p>无可奈何，你只需慢慢的爬下去就好。</p>
+<h2 style="color: #CCCCFF">联系</h2>
+<ul>
+<li>E-mail: <a style="text-decoration: none" href="mailto:codergrowing@gmail.com" target="_blank">codergrowing@gmail.com</a></li>
+<li>QQ: 458823115</li>
+<li>博客项目地址: <a style="text-decoration: none" href="https://github.com/CoderGrowing/Blog" target="_blank">https://github.com/CoderGrowing/Blog</a></li>
+</ul>
+</div>
+
+{% endblock %}

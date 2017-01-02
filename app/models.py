@@ -105,7 +105,6 @@ class Comment(db.Model):
     timestamp = db.Column(db.String(64), index=True, default=datetime.now)
     disabled = db.Column(db.Boolean)
     has_reply = db.Column(db.Boolean, default=False)
-    # reply_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     article_id = db.Column(db.Integer, db.ForeignKey('articles.id'))
     reply_comment = db.relationship('ReplyComment', backref='comment', lazy='dynamic')

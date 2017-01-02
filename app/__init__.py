@@ -1,5 +1,4 @@
 #coding:utf-8
-#工厂函数，初始化所有用到的扩展
 from flask import Flask
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy

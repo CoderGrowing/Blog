@@ -5,7 +5,6 @@ from .forms import UserLoginForm, RegisterForm, CommentForm, EditProfileForm, Ch
 from app.models import db, Article, User, Comment, ReplyComment, Tag
 from app.main import main
 from flask_login import login_user, login_required, logout_user, current_user
-from datetime import datetime
 import hashlib
 
 
@@ -79,7 +78,6 @@ def edit_article(id):
     if request.method == 'POST':
         post.heading = request.form['heading']
         post.body = request.form['article']
-        post.edit_timestamp = datetime.now
         post.article_len = request.form['word-count']
         db.session.add(post)
         flash(u'文章修改成功！')
@@ -253,6 +251,10 @@ def edit_profile():
 
     return render_template('edit-profile.html', form=form)
 
+@main.route('/change-img')
+def change_img():
+    return render_template('change-img.html')
+
 @main.route('/change-password', methods=['POST', 'GET'])
 @login_required
 def change_password():
@@ -267,3 +269,7 @@ def change_password():
             flash(u'密码错误，请确认您输入的密码是否正确')
 
     return render_template('change-password.html', form=form)
+
+@main.route('/about')
+def about():
+    return render_template("about.html")

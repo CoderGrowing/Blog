@@ -1,5 +1,4 @@
 #coding:utf-8
-#启动程序
 import os
 from app import create_app, db
 from app.models import Article, User, Comment, ReplyComment, Tag, articletags

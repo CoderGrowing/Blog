@@ -37,14 +37,10 @@ class RegisterForm(FlaskForm):
             raise ValidationError(u'用户名已被注册')
 
 
-class CommentForm(FlaskForm):
-    body = StringField('', validators=[DataRequired()])
-    submit = SubmitField(u'提交')
-
-
 class EditProfileForm(FlaskForm):
     name = StringField(u'新的昵称', validators=[Length(0, 64)])
     submit = SubmitField(u'提交')
+
 
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField(u'请输入当前密码', validators=[DataRequired()])

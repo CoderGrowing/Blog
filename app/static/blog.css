@@ -1,19 +1,12 @@
 /*
  * Globals
  */
-
 body {
   padding-top: 100px;
   padding-bottom: 80px;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: #555;
-  /*background-image: url("img.png");*/
-  /*background-color: #FFF;*/
-  /*background-image: url("https://www.transparenttextures.com/patterns/black-felt.png");*/
-/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
-background-color: #f5f5f5;
-background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
-/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+  background-color: #e6e6e6;
+  background-image: url("back.png");
 }
 
 h1, .h1,
@@ -59,7 +52,6 @@ h6, .h6 {
   display: inline-block;
   padding: 10px;
   font-weight: 500;
-  /*color: #cdddeb;*/
   color: #DDF0Ed;
 }
 .blog-nav-item:hover,
@@ -117,12 +109,15 @@ h6, .h6 {
 
 .blog-main {
   padding-left: 30px;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
+
 .blog-main p{
   padding: 10px 0;
+  line-height: 1.7;
+  font-family: "Lucida Grande","Helvetica Neue",Helvetica,Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Zen Hei","WenQuanYi Micro Hei","Noto Sans CJK SC","Source Han Sans CN",SimSun,sans-serif";
 }
 
 /* Sidebar modules for boxing content */
@@ -220,7 +215,7 @@ h6, .h6 {
 }
 
 .reply{
-  font-size: 6px;
+  font-size: 10px;
   font-weight: bold;
   padding: 2px;
   margin-left: 20px;
@@ -256,4 +251,9 @@ h6, .h6 {
   border: 1px solid #DDDDDD;
   height: 400px;
   width: 100%;
+}
+
+.about{
+  padding-bottom: 80px;
+  padding-right: 30px;
 }
